@@ -1,0 +1,231 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']  # Run on all branches
+  pull_request:
+    branches: ['**']  # Run on PRs to all branches
+
+jobs:
+  verify-code-generation:
+    name: Verify Code Generation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.9'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Check for uncommitted changes
+        id: verify-generated-files
+        run: |
+          # Check only generated files, ignore pubspec.lock and other files
+          GENERATED_FILES=$(git status --porcelain | grep -E '\.(freezed|g)\.dart$' || true)
+          if [ -n "$GENERATED_FILES" ]; then
+            echo "❌ Generated files are out of sync!"
+            echo ""
+            echo "The following generated files were modified or created:"
+            echo "$GENERATED_FILES"
+            echo ""
+            echo "Please run the following command locally:"
+            echo "  dart run build_runner build --delete-conflicting-outputs"
+            echo ""
+            echo "Then commit the generated files:"
+            echo "  git add lib/**/*.freezed.dart lib/**/*.g.dart"
+            echo "  git commit -m 'chore: regenerate code generation files'"
+            echo ""
+            echo "Diff:"
+            git diff -- 'lib/**/*.freezed.dart' 'lib/**/*.g.dart'
+            exit 1
+          fi
+          echo "✅ Generated files are up to date"
+
+  analyze:
+    name: Analyze Code
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.9'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze code
+        run: flutter analyze
+
+  test-unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.9'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Install lcov
+        run: sudo apt-get update && sudo apt-get install -y lcov
+
+      - name: Run unit tests
+        run: |
+          if [ -n "$(find test/core test/features test/theme -name '*_test.dart' 2>/dev/null)" ]; then
+            flutter test test/core/ test/features/ test/theme/ --coverage --reporter expanded
+          else
+            echo "⚠️ No unit tests found in test/core/, test/features/, or test/theme/, skipping..."
+          fi
+
+      - name: Generate coverage report
+        if: always()
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            lcov --remove coverage/lcov.info '**/*.freezed.dart' '**/*.g.dart' -o coverage/lcov.info || true
+            genhtml coverage/lcov.info -o coverage/html || true
+          fi
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-coverage
+          path: coverage/
+          retention-days: 7
+
+  test-widget:
+    name: Widget Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.9'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Install lcov
+        run: sudo apt-get update && sudo apt-get install -y lcov
+
+      - name: Run widget tests
+        run: |
+          if [ -n "$(find test/ui -name '*_test.dart' 2>/dev/null)" ]; then
+            flutter test test/ui/ --coverage
+          else
+            echo "⚠️ No widget tests found in test/ui/, skipping..."
+          fi
+
+      - name: Generate coverage report
+        if: always()
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            lcov --remove coverage/lcov.info '**/*.freezed.dart' '**/*.g.dart' -o coverage/lcov.info || true
+            genhtml coverage/lcov.info -o coverage/html || true
+          fi
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: widget-test-coverage
+          path: coverage/
+          retention-days: 7
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    needs: [verify-code-generation, analyze, test-unit, test-widget]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.9'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
+
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    needs: [verify-code-generation, analyze, test-unit, test-widget]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.9'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
+
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: build/ios/iphoneos/Runner.app
+          retention-days: 7
