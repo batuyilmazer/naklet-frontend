@@ -49,7 +49,7 @@ class DriverRegisterRepository {
 
   /// Register a new driver with profile and vehicle information.
   ///
-  /// Returns Result<User> after saving tokens to session storage.
+  /// Returns `Result<User>` after saving tokens to session storage.
   Future<Result<User>> register({
     required String email,
     required String password,

@@ -20,10 +20,10 @@ class NearbyVehicleCard extends StatelessWidget {
   final VoidCallback onTap;
 
   IconData _vehicleIcon(VehicleType type) => switch (type) {
-    VehicleType.KAMYONET => Icons.local_shipping,
-    VehicleType.PANELVAN => Icons.airport_shuttle,
-    VehicleType.KAMYON => Icons.fire_truck,
-    VehicleType.TIR => Icons.rv_hookup,
+    VehicleType.kamyonet => Icons.local_shipping,
+    VehicleType.panelvan => Icons.airport_shuttle,
+    VehicleType.kamyon => Icons.fire_truck,
+    VehicleType.tir => Icons.rv_hookup,
   };
 
   @override

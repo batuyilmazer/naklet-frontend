@@ -18,13 +18,13 @@ class Driver {
   final List<Vehicle> vehicles;
 
   /// Whether the driver is approved and visible in search results.
-  bool get isApproved => status == DriverStatus.APPROVED;
+  bool get isApproved => status == DriverStatus.approved;
 
   /// Whether the driver is pending admin approval.
-  bool get isPending => status == DriverStatus.PENDING;
+  bool get isPending => status == DriverStatus.pending;
 
   /// Whether the driver was rejected.
-  bool get isRejected => status == DriverStatus.REJECTED;
+  bool get isRejected => status == DriverStatus.rejected;
 
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(

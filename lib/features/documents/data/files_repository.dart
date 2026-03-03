@@ -71,7 +71,7 @@ class FilesRepository {
 
   /// Request a presigned S3 download URL.
   ///
-  /// GET /files/download?key=<key>
+  /// GET /files/download?key=`<key>`
   /// Returns: { url, key }
   Future<Result<FileUrlResponse>> getDownloadUrl({
     required String key,

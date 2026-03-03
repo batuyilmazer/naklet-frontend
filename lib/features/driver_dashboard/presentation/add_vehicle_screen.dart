@@ -21,7 +21,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   final _formKey = GlobalKey<FormState>();
   final _repository = DriverDashboardRepository();
 
-  VehicleType _selectedType = VehicleType.KAMYONET;
+  VehicleType _selectedType = VehicleType.kamyonet;
   final _plateController = TextEditingController();
   final _capacityController = TextEditingController();
   bool _isLoading = false;

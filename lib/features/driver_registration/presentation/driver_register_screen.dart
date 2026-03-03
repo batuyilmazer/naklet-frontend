@@ -499,7 +499,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
 
 /// Internal vehicle entry helper for the stepper form.
 class _VehicleEntry {
-  VehicleType type = VehicleType.KAMYONET;
+  VehicleType type = VehicleType.kamyonet;
   final plateController = TextEditingController();
   final capacityController = TextEditingController();
 

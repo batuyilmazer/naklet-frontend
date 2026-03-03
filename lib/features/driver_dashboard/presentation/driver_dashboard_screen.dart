@@ -173,23 +173,23 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     final colors = context.appColors;
     final spacing = context.appSpacing;
     final radius = context.appRadius;
-    final status = _driver?.status ?? DriverStatus.PENDING;
+    final status = _driver?.status ?? DriverStatus.pending;
 
     final (Color bgColor, Color textColor, IconData icon, String message) =
         switch (status) {
-      DriverStatus.PENDING => (
+      DriverStatus.pending => (
           Colors.orange.withValues(alpha: 0.1),
           Colors.orange,
           Icons.hourglass_top,
           'Profiliniz inceleniyor. Admin onayı bekleniyor.',
         ),
-      DriverStatus.APPROVED => (
+      DriverStatus.approved => (
           Colors.green.withValues(alpha: 0.1),
           Colors.green,
           Icons.check_circle,
           'Profiliniz onaylı! Arama sonuçlarında görünüyorsunuz.',
         ),
-      DriverStatus.REJECTED => (
+      DriverStatus.rejected => (
           colors.error.withValues(alpha: 0.1),
           colors.error,
           Icons.cancel,
