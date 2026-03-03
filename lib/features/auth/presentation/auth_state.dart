@@ -11,6 +11,14 @@ class UnauthenticatedState extends AuthState {
   const UnauthenticatedState();
 }
 
+/// User is browsing as a guest (kayıtsız müşteri / yük sahibi).
+///
+/// Guests can view posts (driver listings) but cannot create, edit,
+/// or perform any write operations.
+class GuestState extends AuthState {
+  const GuestState();
+}
+
 /// User is authenticated and logged in.
 class AuthenticatedState extends AuthState {
   const AuthenticatedState(this.user);

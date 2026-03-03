@@ -35,7 +35,65 @@ class ApiClient {
     });
   }
 
+  Future<Map<String, dynamic>> getJsonWithParams(
+    String path, {
+    Map<String, String>? queryParams,
+    Map<String, String>? headers,
+  }) async {
+    return await _executeRequest(() async {
+      final modifiedHeaders = _authInterceptor != null
+          ? await _authInterceptor.interceptRequest(headers)
+          : headers;
+      final uri = Uri.parse('${AppConfig.apiBaseUrl}$path').replace(
+        queryParameters: queryParams,
+      );
+      final response = await _client.get(uri, headers: modifiedHeaders);
+      return response;
+    });
+  }
+
   Future<Map<String, dynamic>> postJson(
+    String path, {
+    Map<String, String>? headers,
+    Map<String, String>? queryParams,
+    Object? body,
+  }) async {
+    return await _executeRequest(() async {
+      final baseHeaders = {
+        'Content-Type': 'application/json',
+        if (headers != null) ...headers,
+      };
+      final modifiedHeaders = _authInterceptor != null
+          ? await _authInterceptor.interceptRequest(baseHeaders)
+          : baseHeaders;
+      var uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
+      if (queryParams != null) {
+        uri = uri.replace(queryParameters: queryParams);
+      }
+      final response = await _client.post(
+        uri,
+        headers: modifiedHeaders,
+        body: body == null ? null : jsonEncode(body),
+      );
+      return response;
+    });
+  }
+
+  Future<Map<String, dynamic>> deleteJson(
+    String path, {
+    Map<String, String>? headers,
+  }) async {
+    return await _executeRequest(() async {
+      final modifiedHeaders = _authInterceptor != null
+          ? await _authInterceptor.interceptRequest(headers)
+          : headers;
+      final uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
+      final response = await _client.delete(uri, headers: modifiedHeaders);
+      return response;
+    });
+  }
+
+  Future<Map<String, dynamic>> patchJson(
     String path, {
     Map<String, String>? headers,
     Object? body,
@@ -49,7 +107,7 @@ class ApiClient {
           ? await _authInterceptor.interceptRequest(baseHeaders)
           : baseHeaders;
       final uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
-      final response = await _client.post(
+      final response = await _client.patch(
         uri,
         headers: modifiedHeaders,
         body: body == null ? null : jsonEncode(body),

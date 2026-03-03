@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
             mode: RoutingMode.shell,
           );
           return MaterialApp.router(
-            title: 'Flutter Frontend Boilerplate',
+            title: 'Naklet.net',
             theme: AppThemeData.light().toThemeData(),
             darkTheme: AppThemeData.dark().toThemeData(),
             themeMode: themeNotifier.themeMode,

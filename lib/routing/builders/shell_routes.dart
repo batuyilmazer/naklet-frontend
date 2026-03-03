@@ -1,61 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/profile/presentation/home_screen.dart';
-import '../../features/profile/presentation/profile_screen.dart';
+import '../../features/search/presentation/search_screen.dart';
+import '../../features/search/presentation/vehicle_detail_screen.dart';
+import '../../features/driver_dashboard/presentation/driver_dashboard_screen.dart';
+import '../../features/driver_dashboard/presentation/add_vehicle_screen.dart';
+import '../../features/driver_dashboard/presentation/driver_profile_screen.dart';
+import '../../features/documents/presentation/document_upload_screen.dart';
+import '../../core/models/search/nearby_vehicle.dart';
 import '../../ui/layout/main_shell.dart';
-import '../../ui/pages/components_page.dart';
 import '../route_paths.dart';
 
-/// Route definitions for the shell-based layout (e.g. bottom navigation).
+/// Route definitions for the shell-based layout (bottom navigation).
 ///
-/// This builder groups authenticated routes under a [ShellRoute] so that
-/// they share a common layout while keeping feature routes modular.
+/// Naklet.net shell with 3 tabs:
+/// - Keşfet (Search): Public — accessible by guests and drivers
+/// - Pano (Dashboard): Driver only
+/// - Profil (Profile): Driver only
 class ShellRoutes {
-  /// Get all routes that should be hosted inside the shell layout.
-  ///
-  /// Template consumers can adjust which routes live under the shell by:
-  /// - Changing the tab configuration in [_buildShellTabs]
-  /// - Adding more nested [GoRoute]s for new features
   static List<RouteBase> get routes => [
     ShellRoute(
       builder: (context, state, child) =>
           MainShell(tabs: _buildShellTabs(), child: child),
       routes: [
         GoRoute(
-          path: AppRoutes.home,
+          path: AppRoutes.search,
           name: 'home',
-          builder: (context, state) => const HomeScreen(),
+          builder: (context, state) => const SearchScreen(),
         ),
         GoRoute(
-          path: AppRoutes.profile,
+          path: AppRoutes.driverDashboard,
+          name: 'dashboard',
+          builder: (context, state) => const DriverDashboardScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.driverProfile,
           name: 'profile',
-          builder: (context, state) => const ProfileScreen(),
-        ),
-        GoRoute(
-          path: AppRoutes.components,
-          name: 'components',
-          builder: (context, state) => const ComponentsPage(),
+          builder: (context, state) => const DriverProfileScreen(),
         ),
       ],
     ),
+    // Non-shell routes (push on top of shell)
+    GoRoute(
+      path: AppRoutes.vehicleDetail,
+      name: 'vehicleDetail',
+      builder: (context, state) {
+        final vehicle = state.extra as NearbyVehicle;
+        return VehicleDetailScreen(vehicle: vehicle);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.addVehicle,
+      name: 'addVehicle',
+      builder: (context, state) => const AddVehicleScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.documentUpload,
+      name: 'documentUpload',
+      builder: (context, state) => const DocumentUploadScreen(),
+    ),
   ];
 
-  /// Default tab configuration for the shell layout.
-  ///
-  /// This is intentionally small and opinionated, but can be modified or
-  /// replaced by template consumers to fit their navigation needs.
   static List<ShellTabConfig> _buildShellTabs() => const [
-    ShellTabConfig(label: 'Home', icon: Icons.home, path: AppRoutes.home),
     ShellTabConfig(
-      label: 'Profile',
-      icon: Icons.person,
-      path: AppRoutes.profile,
+      label: 'Keşfet',
+      icon: Icons.search,
+      path: AppRoutes.search,
     ),
     ShellTabConfig(
-      label: 'Components',
-      icon: Icons.widgets,
-      path: AppRoutes.components,
+      label: 'Pano',
+      icon: Icons.dashboard,
+      path: AppRoutes.driverDashboard,
+    ),
+    ShellTabConfig(
+      label: 'Profil',
+      icon: Icons.person,
+      path: AppRoutes.driverProfile,
     ),
   ];
 }

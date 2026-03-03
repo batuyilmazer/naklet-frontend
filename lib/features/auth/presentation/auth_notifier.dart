@@ -27,8 +27,14 @@ class AuthNotifier extends ChangeNotifier {
     return state is AuthenticatedState ? state.user : null;
   }
 
-  /// Whether user is currently authenticated.
+  /// Whether user is currently authenticated (registered user).
   bool get isAuthenticated => _state is AuthenticatedState;
+
+  /// Whether user is browsing as a guest (kayıtsız müşteri).
+  bool get isGuest => _state is GuestState;
+
+  /// Whether user has access to the app (authenticated or guest).
+  bool get isLoggedIn => isAuthenticated || isGuest;
 
   /// Whether an auth operation is in progress.
   bool get isLoading => _state is AuthLoadingState;
@@ -90,6 +96,15 @@ class AuthNotifier extends ChangeNotifier {
     } catch (e) {
       _handleFailure(ErrorMapper.mapException(e));
     }
+  }
+
+  /// Continue as a guest (kayıtsız müşteri / yük sahibi).
+  ///
+  /// Sets the state to [GuestState], allowing the user to browse
+  /// posts (driver listings) without creating an account.
+  void continueAsGuest() {
+    _state = const GuestState();
+    notifyListeners();
   }
 
   /// Logout from current session.

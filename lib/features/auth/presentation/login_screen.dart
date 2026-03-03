@@ -60,13 +60,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: spacing.s32),
                   // Logo or app name placeholder
                   AppText.headline(
-                    'Welcome Back',
+                    'Naklet.net',
                     textAlign: TextAlign.center,
-                    color: colors.textPrimary,
+                    color: colors.primary,
                   ),
                   SizedBox(height: spacing.s8),
                   AppText.bodySmall(
-                    'Sign in to continue',
+                    'Nakliyeci mi arıyorsunuz? Giriş yapın veya ziyaretçi olarak keşfedin.',
                     textAlign: TextAlign.center,
                     color: colors.textSecondary,
                   ),
@@ -93,34 +93,61 @@ class _LoginScreenState extends State<LoginScreen> {
                         _parseError(state.message);
                       }
                     },
-                    submitLabel: 'Sign In',
+                    submitLabel: 'Giriş Yap',
                     emailLabel: 'Email',
-                    passwordLabel: 'Password',
-                    emailHint: 'Enter your email address',
-                    passwordHint: 'Enter your password',
+                    passwordLabel: 'Şifre',
+                    emailHint: 'Email adresinizi girin',
+                    passwordHint: 'Şifrenizi girin',
                     isLoading: state is AuthLoadingState,
                     emailError: _emailError,
                     passwordError: _passwordError,
                   ),
                   SizedBox(height: spacing.s24),
-                  // Register link
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppText.bodySmall(
-                        "Don't have an account? ",
-                        color: colors.textSecondary,
+                  // Sürücü kayıt butonu
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      context.go(AppRoutes.driverRegister);
+                    },
+                    icon: const Icon(Icons.local_shipping_outlined),
+                    label: const Text('Sürücü Olarak Kayıt Ol'),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: spacing.s16),
+                      side: BorderSide(color: colors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          context.go(AppRoutes.register);
-                        },
-                        child: AppText.bodySmall(
-                          'Sign Up',
-                          color: colors.primary,
+                    ),
+                  ),
+                  SizedBox(height: spacing.s8),
+                  // Divider with "or" text
+                  Row(
+                    children: [
+                      Expanded(child: Divider(color: colors.textSecondary.withValues(alpha: 0.3))),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: spacing.s16),
+                        child: AppText.caption(
+                          'veya',
+                          color: colors.textSecondary,
                         ),
                       ),
+                      Expanded(child: Divider(color: colors.textSecondary.withValues(alpha: 0.3))),
                     ],
+                  ),
+                  SizedBox(height: spacing.s8),
+                  // Guest access button for unregistered customers (yük sahipleri)
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      authNotifier.continueAsGuest();
+                    },
+                    icon: const Icon(Icons.explore_outlined),
+                    label: const Text('Ziyaretçi Olarak Keşfet'),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: spacing.s16),
+                      side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                   SizedBox(height: spacing.s16),
                   // Forgot password link

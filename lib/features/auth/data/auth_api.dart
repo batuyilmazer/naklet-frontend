@@ -159,8 +159,8 @@ class AuthApi {
 
   /// Verify email address using 2FA token.
   ///
-  /// POST /auth/verify-email
-  /// Headers: Authorization: Bearer `accessToken`, X-2FA-Token: `token`
+  /// POST /auth/verify-email?token=<2fa_token>
+  /// Auth: Bearer (User) + Query `?token=<2fa_token>`
   /// Returns: {msg: string}
   Future<void> verifyEmail({
     required String accessToken,
@@ -168,17 +168,15 @@ class AuthApi {
   }) async {
     await _client.postJson(
       '/auth/verify-email',
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'X-2FA-Token': twoFaToken,
-      },
+      headers: {'Authorization': 'Bearer $accessToken'},
+      queryParams: {'token': twoFaToken},
     );
   }
 
   /// Reset password using 2FA token.
   ///
-  /// POST /auth/reset-password
-  /// Headers: Authorization: Bearer `accessToken`, X-2FA-Token: `token`
+  /// POST /auth/reset-password?token=<2fa_token>
+  /// Auth: Bearer (User) + Query `?token=<2fa_token>`
   /// Body: {newPassword: string}
   /// Returns: {msg: string}
   Future<void> resetPassword({
@@ -188,10 +186,8 @@ class AuthApi {
   }) async {
     await _client.postJson(
       '/auth/reset-password',
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'X-2FA-Token': twoFaToken,
-      },
+      headers: {'Authorization': 'Bearer $accessToken'},
+      queryParams: {'token': twoFaToken},
       body: {'newPassword': newPassword},
     );
   }
