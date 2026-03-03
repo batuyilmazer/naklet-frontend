@@ -14,27 +14,33 @@ class SecureStorageImpl implements SecureStorage {
   SecureStorageImpl({FlutterSecureStorage? storage})
     : _storage =
           storage ??
-          // On mobile platforms, use secure storage plugins.
-          (defaultTargetPlatform == TargetPlatform.android ||
-                  defaultTargetPlatform == TargetPlatform.iOS
-              ? const FlutterSecureStorage(
-                  aOptions: AndroidOptions(encryptedSharedPreferences: true),
-                  iOptions: IOSOptions(
-                    accessibility:
-                        KeychainAccessibility.first_unlock_this_device,
-                  ),
-                )
-              // On desktop/web (macOS, Windows, Linux, web), fall back to
-              // a simple file-based storage to avoid Keychain entitlements
-              // issues during local development.
-              : const FlutterSecureStorage());
+          // On web, use flutter_secure_storage's web implementation.
+          (kIsWeb
+              ? const FlutterSecureStorage()
+              // On mobile platforms, use secure storage plugins.
+              : (defaultTargetPlatform == TargetPlatform.android ||
+                        defaultTargetPlatform == TargetPlatform.iOS
+                    ? const FlutterSecureStorage(
+                        aOptions: AndroidOptions(
+                          encryptedSharedPreferences: true,
+                        ),
+                        iOptions: IOSOptions(
+                          accessibility:
+                              KeychainAccessibility.first_unlock_this_device,
+                        ),
+                      )
+                    // On desktop (macOS, Windows, Linux), fall back to
+                    // a simple file-based storage to avoid Keychain entitlements
+                    // issues during local development.
+                    : const FlutterSecureStorage()));
 
   final FlutterSecureStorage _storage;
 
   bool get _useFileStorage =>
-      defaultTargetPlatform == TargetPlatform.macOS ||
-      defaultTargetPlatform == TargetPlatform.windows ||
-      defaultTargetPlatform == TargetPlatform.linux;
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.macOS ||
+          defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux);
 
   File get _fileStorage {
     final home = Platform.environment['HOME'] ?? '.';
