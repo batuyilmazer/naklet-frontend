@@ -90,6 +90,8 @@ static const String apiBaseUrl = 'https://naklet-api.ituacm.com';
 // 'http://192.168.1.50:3000'
 ```
 
+Not: `apiBaseUrl` değerini mümkünse sonda `/` olmadan tanımlayın.
+
 ### Production URL yapılandırmak
 
 Prod build almadan önce:

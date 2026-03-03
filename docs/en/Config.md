@@ -89,6 +89,8 @@ static const String apiBaseUrl = 'https://naklet-api.ituacm.com';
 // or 'http://192.168.1.50:3000' if hitting a LAN backend
 ```
 
+Note: Prefer defining `apiBaseUrl` without a trailing `/`.
+
 ### Configure production URL
 
 Before building for production:

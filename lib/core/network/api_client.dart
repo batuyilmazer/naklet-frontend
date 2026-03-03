@@ -14,12 +14,17 @@ import 'auth_interceptor.dart';
 ///
 /// Supports optional [AuthInterceptor] for automatic token injection and refresh.
 class ApiClient {
-  ApiClient({http.Client? httpClient, AuthInterceptor? authInterceptor})
-    : _client = httpClient ?? http.Client(),
-      _authInterceptor = authInterceptor;
+  ApiClient({
+    http.Client? httpClient,
+    AuthInterceptor? authInterceptor,
+    String? baseUrl,
+  }) : _client = httpClient ?? http.Client(),
+       _authInterceptor = authInterceptor,
+       _baseUrl = baseUrl ?? AppConfig.apiBaseUrl;
 
   final http.Client _client;
   final AuthInterceptor? _authInterceptor;
+  final String _baseUrl;
 
   Future<Map<String, dynamic>> getJson(
     String path, {
@@ -29,7 +34,7 @@ class ApiClient {
       final modifiedHeaders = _authInterceptor != null
           ? await _authInterceptor.interceptRequest(headers)
           : headers;
-      final uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
+      final uri = _buildUri(path);
       final response = await _client.get(uri, headers: modifiedHeaders);
       return response;
     });
@@ -44,9 +49,7 @@ class ApiClient {
       final modifiedHeaders = _authInterceptor != null
           ? await _authInterceptor.interceptRequest(headers)
           : headers;
-      final uri = Uri.parse('${AppConfig.apiBaseUrl}$path').replace(
-        queryParameters: queryParams,
-      );
+      final uri = _buildUri(path, queryParams: queryParams);
       final response = await _client.get(uri, headers: modifiedHeaders);
       return response;
     });
@@ -66,10 +69,7 @@ class ApiClient {
       final modifiedHeaders = _authInterceptor != null
           ? await _authInterceptor.interceptRequest(baseHeaders)
           : baseHeaders;
-      var uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
-      if (queryParams != null) {
-        uri = uri.replace(queryParameters: queryParams);
-      }
+      final uri = _buildUri(path, queryParams: queryParams);
       final response = await _client.post(
         uri,
         headers: modifiedHeaders,
@@ -87,7 +87,7 @@ class ApiClient {
       final modifiedHeaders = _authInterceptor != null
           ? await _authInterceptor.interceptRequest(headers)
           : headers;
-      final uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
+      final uri = _buildUri(path);
       final response = await _client.delete(uri, headers: modifiedHeaders);
       return response;
     });
@@ -106,7 +106,7 @@ class ApiClient {
       final modifiedHeaders = _authInterceptor != null
           ? await _authInterceptor.interceptRequest(baseHeaders)
           : baseHeaders;
-      final uri = Uri.parse('${AppConfig.apiBaseUrl}$path');
+      final uri = _buildUri(path);
       final response = await _client.patch(
         uri,
         headers: modifiedHeaders,
@@ -147,6 +147,16 @@ class ApiClient {
     return _handleJsonResponse(response);
   }
 
+  Uri _buildUri(String path, {Map<String, String>? queryParams}) {
+    final base = _baseUrl.replaceFirst(RegExp(r'/+$'), '');
+    final cleanPath = path.replaceFirst(RegExp(r'^/+'), '');
+    final normalizedPath = cleanPath.isEmpty ? '' : '/$cleanPath';
+
+    return Uri.parse(
+      '$base$normalizedPath',
+    ).replace(queryParameters: queryParams);
+  }
+
   Map<String, dynamic> _handleJsonResponse(http.Response response) {
     if (kDebugMode) {
       debugPrint(
@@ -170,9 +180,9 @@ class ApiClient {
     throw ApiException(
       decoded is Map<String, dynamic>
           ? (decoded['message']?.toString() ??
-              decoded['Error']?.toString() ??
-              decoded['error']?.toString() ??
-              'Request failed')
+                decoded['Error']?.toString() ??
+                decoded['error']?.toString() ??
+                'Request failed')
           : 'Request failed',
       statusCode: response.statusCode,
       errorCode: decoded is Map<String, dynamic>
