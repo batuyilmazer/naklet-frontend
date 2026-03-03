@@ -13,6 +13,9 @@ enum VehicleType {
     tir => 'TIR',
   };
 
+  /// Backend-compatible UPPERCASE value for serialization.
+  String get apiValue => name.toUpperCase();
+
   /// Parse from backend string value.
   static VehicleType fromString(String value) {
     return VehicleType.values.firstWhere(

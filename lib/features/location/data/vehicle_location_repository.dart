@@ -9,12 +9,13 @@ class VehicleLocationRepository {
   VehicleLocationRepository({
     ApiClient? apiClient,
     AuthRepository? authRepository,
-  }) : _apiClient = apiClient ??
-            ApiClient(
-              authInterceptor: authRepository != null
-                  ? AuthInterceptor(authRepository: authRepository)
-                  : null,
-            );
+  }) : _apiClient =
+           apiClient ??
+           ApiClient(
+             authInterceptor: AuthInterceptor(
+               authRepository: authRepository ?? AuthRepository(),
+             ),
+           );
 
   final ApiClient _apiClient;
 

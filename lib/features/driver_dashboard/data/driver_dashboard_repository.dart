@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../core/models/driver/driver.dart';
+import '../../../core/errors/app_exception.dart';
 import '../../../core/models/driver/vehicle.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/network/auth_interceptor.dart';
@@ -11,12 +14,13 @@ class DriverDashboardRepository {
   DriverDashboardRepository({
     ApiClient? apiClient,
     AuthRepository? authRepository,
-  }) : _apiClient = apiClient ??
-            ApiClient(
-              authInterceptor: authRepository != null
-                  ? AuthInterceptor(authRepository: authRepository)
-                  : null,
-            );
+  }) : _apiClient =
+           apiClient ??
+           ApiClient(
+             authInterceptor: AuthInterceptor(
+               authRepository: authRepository ?? AuthRepository(),
+             ),
+           );
 
   final ApiClient _apiClient;
 
@@ -29,7 +33,23 @@ class DriverDashboardRepository {
     if (driverData == null) {
       throw Exception('Driver data not found in response');
     }
-    return Driver.fromJson(driverData);
+    final driver = Driver.fromJson(driverData);
+
+    try {
+      final profileResponse = await _apiClient.getJson('/me/profile');
+      final profile = profileResponse['profile'] as Map<String, dynamic>?;
+      if (profile != null) {
+        return driver.copyWith(
+          firstName: profile['firstName'] as String?,
+          lastName: profile['lastName'] as String?,
+          phoneNumber: profile['phoneNumber'] as String?,
+        );
+      }
+    } catch (_) {
+      // Personal profile data is optional for this screen.
+    }
+
+    return driver;
   }
 
   /// Add a new vehicle to the driver's fleet.
@@ -76,12 +96,44 @@ class DriverDashboardRepository {
     final body = <String, dynamic>{};
     if (licenseKey != null) {
       body['licenseKey'] = licenseKey;
-      body['licenseChecksum'] = licenseChecksum;
+      if (licenseChecksum != null) {
+        body['licenseChecksum'] = licenseChecksum;
+      }
     }
     if (registrationKey != null) {
       body['registrationKey'] = registrationKey;
-      body['registrationChecksum'] = registrationChecksum;
+      if (registrationChecksum != null) {
+        body['registrationChecksum'] = registrationChecksum;
+      }
     }
-    await _apiClient.patchJson('/drivers/documents', body: body);
+    if (kDebugMode) {
+      debugPrint(
+        '[DriverDashboardRepository][Documents] PATCH /drivers/documents '
+        'licenseKey=$licenseKey registrationKey=$registrationKey',
+      );
+    }
+    try {
+      await _apiClient.patchJson('/drivers/documents', body: body);
+      if (kDebugMode) {
+        debugPrint(
+          '[DriverDashboardRepository][Documents] confirm response: success',
+        );
+      }
+    } on ApiException catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[DriverDashboardRepository][Documents] ApiException '
+          'status=${e.statusCode} message=${e.message} body=${e.responseBody}',
+        );
+      }
+      rethrow;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[DriverDashboardRepository][Documents] Exception type=${e.runtimeType} message=$e',
+        );
+      }
+      rethrow;
+    }
   }
 }

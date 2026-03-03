@@ -49,6 +49,7 @@ class AuthForm extends StatefulWidget {
     this.passwordLabel = 'Password',
     this.emailHint,
     this.passwordHint,
+    this.minPasswordLength = 6,
     this.isLoading = false,
     this.emailError,
     this.passwordError,
@@ -60,6 +61,7 @@ class AuthForm extends StatefulWidget {
   final String passwordLabel;
   final String? emailHint;
   final String? passwordHint;
+  final int minPasswordLength;
   final bool isLoading;
   final String? emailError;
   final String? passwordError;
@@ -101,8 +103,8 @@ class _AuthFormState extends State<AuthForm> {
     if (value == null || value.isEmpty) {
       return 'Password is required';
     }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+    if (value.length < widget.minPasswordLength) {
+      return 'Password must be at least ${widget.minPasswordLength} characters';
     }
     return widget.passwordError;
   }

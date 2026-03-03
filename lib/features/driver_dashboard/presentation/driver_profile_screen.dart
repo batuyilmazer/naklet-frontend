@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
+import '../../../features/auth/presentation/auth_notifier.dart';
+import '../../../routing/route_paths.dart';
 import '../../../core/models/driver/driver.dart';
 import '../../../theme/extensions/theme_context_extensions.dart';
 import '../../../ui/atoms/app_text.dart';
@@ -67,7 +71,23 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profil')),
+      appBar: AppBar(
+        title: const Text('Profil'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              final authNotifier = Provider.of<AuthNotifier>(
+                context,
+                listen: false,
+              );
+              authNotifier.logout();
+              context.go(AppRoutes.login);
+            },
+            icon: const Icon(Icons.logout),
+            tooltip: 'Çıkış',
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(spacing.s16),
         child: Column(
@@ -105,6 +125,27 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 padding: EdgeInsets.all(spacing.s16),
                 child: Column(
                   children: [
+                    _profileRow(
+                      context,
+                      Icons.person_outline,
+                      'Ad',
+                      _driver!.firstName ?? '—',
+                    ),
+                    Divider(height: spacing.s24),
+                    _profileRow(
+                      context,
+                      Icons.person,
+                      'Soyad',
+                      _driver!.lastName ?? '—',
+                    ),
+                    Divider(height: spacing.s24),
+                    _profileRow(
+                      context,
+                      Icons.phone_outlined,
+                      'Telefon',
+                      _driver!.phoneNumber ?? '—',
+                    ),
+                    Divider(height: spacing.s24),
                     _profileRow(
                       context,
                       Icons.badge_outlined,

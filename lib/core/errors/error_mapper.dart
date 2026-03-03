@@ -32,11 +32,11 @@ class ErrorMapper {
       );
     }
 
-    if (status == 422) {
-      // Placeholder for future backend validation error parsing.
+    if (status == 400 || status == 422) {
+      final fieldErrors = _extractFieldErrors(exception);
       return ValidationFailure(
-        message: exception.message,
-        fieldErrors: const {},
+        message: _validationMessage(exception),
+        fieldErrors: fieldErrors,
         originalError: exception,
       );
     }
@@ -93,5 +93,48 @@ class ErrorMapper {
       message: 'An unexpected error occurred',
       originalError: error,
     );
+  }
+
+  static String _validationMessage(ApiException exception) {
+    final lower = exception.message.toLowerCase();
+    if (lower == 'validation_error' || lower == 'validasyon_hatasi') {
+      final details = exception.responseBody?['details'];
+      if (details is List && details.isNotEmpty) {
+        final first = details.first;
+        if (first is Map<String, dynamic>) {
+          final detailMessage = first['message'];
+          if (detailMessage is String && detailMessage.trim().isNotEmpty) {
+            return detailMessage;
+          }
+        }
+      }
+      return 'Validation failed';
+    }
+    return exception.message;
+  }
+
+  static Map<String, List<String>> _extractFieldErrors(ApiException exception) {
+    final details = exception.responseBody?['details'];
+    if (details is! List) return const {};
+
+    final result = <String, List<String>>{};
+    for (final issue in details) {
+      if (issue is! Map<String, dynamic>) continue;
+      final issueMessage = issue['message'];
+      if (issueMessage is! String || issueMessage.trim().isEmpty) continue;
+
+      final pathValue = issue['path'];
+      final fieldKey = _pathToFieldKey(pathValue);
+      final key = fieldKey.isEmpty ? '_form' : fieldKey;
+
+      result.putIfAbsent(key, () => <String>[]).add(issueMessage);
+    }
+
+    return result;
+  }
+
+  static String _pathToFieldKey(dynamic pathValue) {
+    if (pathValue is! List || pathValue.isEmpty) return '';
+    return pathValue.map((e) => e.toString()).join('.');
   }
 }

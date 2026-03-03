@@ -40,6 +40,10 @@ dependencies:
 
   # HTTP client for API requests
   http: ^1.2.2
+  file_picker: ^8.1.2
+  image_picker: ^1.1.2
+  crypto: ^3.0.6
+  mime: ^1.0.6
 
   # State management
   provider: ^6.1.2

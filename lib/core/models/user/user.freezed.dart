@@ -20,7 +20,6 @@ mixin _$User {
   String get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   bool get emailVerified => throw _privateConstructorUsedError;
-  bool get isSuspended => throw _privateConstructorUsedError;
   DateTime? get lastLoginAt => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
@@ -40,7 +39,6 @@ abstract class $UserCopyWith<$Res> {
     String id,
     String email,
     bool emailVerified,
-    bool isSuspended,
     DateTime? lastLoginAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -65,7 +63,6 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? id = null,
     Object? email = null,
     Object? emailVerified = null,
-    Object? isSuspended = null,
     Object? lastLoginAt = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -83,10 +80,6 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
             emailVerified: null == emailVerified
                 ? _value.emailVerified
                 : emailVerified // ignore: cast_nullable_to_non_nullable
-                      as bool,
-            isSuspended: null == isSuspended
-                ? _value.isSuspended
-                : isSuspended // ignore: cast_nullable_to_non_nullable
                       as bool,
             lastLoginAt: freezed == lastLoginAt
                 ? _value.lastLoginAt
@@ -118,7 +111,6 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
     String id,
     String email,
     bool emailVerified,
-    bool isSuspended,
     DateTime? lastLoginAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -140,7 +132,6 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? id = null,
     Object? email = null,
     Object? emailVerified = null,
-    Object? isSuspended = null,
     Object? lastLoginAt = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -158,10 +149,6 @@ class __$$UserImplCopyWithImpl<$Res>
         emailVerified: null == emailVerified
             ? _value.emailVerified
             : emailVerified // ignore: cast_nullable_to_non_nullable
-                  as bool,
-        isSuspended: null == isSuspended
-            ? _value.isSuspended
-            : isSuspended // ignore: cast_nullable_to_non_nullable
                   as bool,
         lastLoginAt: freezed == lastLoginAt
             ? _value.lastLoginAt
@@ -187,7 +174,6 @@ class _$UserImpl extends _User {
     required this.id,
     required this.email,
     this.emailVerified = false,
-    this.isSuspended = false,
     this.lastLoginAt,
     this.createdAt,
     this.updatedAt,
@@ -201,9 +187,6 @@ class _$UserImpl extends _User {
   @JsonKey()
   final bool emailVerified;
   @override
-  @JsonKey()
-  final bool isSuspended;
-  @override
   final DateTime? lastLoginAt;
   @override
   final DateTime? createdAt;
@@ -212,7 +195,7 @@ class _$UserImpl extends _User {
 
   @override
   String toString() {
-    return 'User(id: $id, email: $email, emailVerified: $emailVerified, isSuspended: $isSuspended, lastLoginAt: $lastLoginAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'User(id: $id, email: $email, emailVerified: $emailVerified, lastLoginAt: $lastLoginAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -224,8 +207,6 @@ class _$UserImpl extends _User {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.emailVerified, emailVerified) ||
                 other.emailVerified == emailVerified) &&
-            (identical(other.isSuspended, isSuspended) ||
-                other.isSuspended == isSuspended) &&
             (identical(other.lastLoginAt, lastLoginAt) ||
                 other.lastLoginAt == lastLoginAt) &&
             (identical(other.createdAt, createdAt) ||
@@ -240,7 +221,6 @@ class _$UserImpl extends _User {
     id,
     email,
     emailVerified,
-    isSuspended,
     lastLoginAt,
     createdAt,
     updatedAt,
@@ -260,7 +240,6 @@ abstract class _User extends User {
     required final String id,
     required final String email,
     final bool emailVerified,
-    final bool isSuspended,
     final DateTime? lastLoginAt,
     final DateTime? createdAt,
     final DateTime? updatedAt,
@@ -273,8 +252,6 @@ abstract class _User extends User {
   String get email;
   @override
   bool get emailVerified;
-  @override
-  bool get isSuspended;
   @override
   DateTime? get lastLoginAt;
   @override

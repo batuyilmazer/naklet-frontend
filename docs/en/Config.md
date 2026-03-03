@@ -69,7 +69,7 @@ class AppConfig {
   ///
   /// In a real project, consider using flavors or `--dart-define` to override
   /// this per environment (dev, staging, prod).
-  static const String apiBaseUrl = 'http://localhost:3000';
+  static const String apiBaseUrl = 'https://naklet-api.ituacm.com';
 }
 ```
 
@@ -85,7 +85,7 @@ This value is typically used when constructing `ApiClient`.
 2. Update `apiBaseUrl`:
 
 ```dart
-static const String apiBaseUrl = 'http://localhost:3000';
+static const String apiBaseUrl = 'https://naklet-api.ituacm.com';
 // or 'http://192.168.1.50:3000' if hitting a LAN backend
 ```
 
@@ -142,4 +142,3 @@ This boilerplate keeps things simple with a single `AppConfig` class you can ada
 
 - Config: `lib/core/config/app_config.dart`
 - Network usage: `lib/core/network/api_client.dart`
-

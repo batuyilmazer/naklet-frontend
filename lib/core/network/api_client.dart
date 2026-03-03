@@ -163,11 +163,22 @@ class ApiClient {
       return decoded is Map<String, dynamic> ? decoded : <String, dynamic>{};
     }
 
+    if (kDebugMode && decoded is Map<String, dynamic>) {
+      debugPrint('HTTP error body: $decoded');
+    }
+
     throw ApiException(
       decoded is Map<String, dynamic>
-          ? (decoded['message']?.toString() ?? 'Request failed')
+          ? (decoded['message']?.toString() ??
+              decoded['Error']?.toString() ??
+              decoded['error']?.toString() ??
+              'Request failed')
           : 'Request failed',
       statusCode: response.statusCode,
+      errorCode: decoded is Map<String, dynamic>
+          ? (decoded['Error']?.toString() ?? decoded['error']?.toString())
+          : null,
+      responseBody: decoded is Map<String, dynamic> ? decoded : null,
     );
   }
 }

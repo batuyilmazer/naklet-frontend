@@ -5,5 +5,5 @@ class AppConfig {
   ///
   /// In a real project, consider using flavors or `--dart-define` to override
   /// this per environment (dev, staging, prod).
-  static const String apiBaseUrl = 'http://localhost:3000';
+  static const String apiBaseUrl = 'https://naklet-api.ituacm.com';
 }

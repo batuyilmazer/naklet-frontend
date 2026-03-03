@@ -3,6 +3,7 @@ import '../../../core/models/user/models.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/storage/session_storage.dart';
 import '../../../core/storage/session_storage_impl.dart';
+import 'package:flutter/foundation.dart';
 
 
 /// Response model for driver registration endpoint.
@@ -59,6 +60,12 @@ class DriverRegisterRepository {
     required List<Map<String, dynamic>> vehicles,
   }) async {
     try {
+      if (kDebugMode) {
+        debugPrint(
+          'Driver register payload summary: email=$email, '
+          'vehicles=${vehicles.map((v) => v['type']).toList()}',
+        );
+      }
       final response = await _apiClient.postJson(
         '/drivers/register',
         body: {
@@ -83,6 +90,13 @@ class DriverRegisterRepository {
 
       return success<User>(registerResponse.user);
     } on ApiException catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          'Driver register failed: status=${e.statusCode}, '
+          'errorCode=${e.errorCode}, message=${e.message}, '
+          'body=${e.responseBody}',
+        );
+      }
       return fail<User>(ErrorMapper.mapApiException(e));
     } catch (e) {
       return fail<User>(ErrorMapper.mapException(e));

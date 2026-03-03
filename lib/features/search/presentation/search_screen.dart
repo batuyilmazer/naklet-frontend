@@ -66,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
         lat: _lat!,
         lng: _lng!,
         radius: _radius,
-        vehicleType: _selectedType?.name,
+        vehicleType: _selectedType?.apiValue,
       );
       if (mounted) {
         setState(() {

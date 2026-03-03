@@ -11,6 +11,9 @@ enum DriverStatus {
     rejected => 'Reddedildi',
   };
 
+  /// Backend-compatible UPPERCASE value for serialization.
+  String get apiValue => name.toUpperCase();
+
   /// Parse from backend string value.
   static DriverStatus fromString(String value) {
     return DriverStatus.values.firstWhere(

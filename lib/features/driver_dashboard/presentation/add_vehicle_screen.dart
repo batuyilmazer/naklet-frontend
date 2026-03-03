@@ -44,7 +44,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
 
     try {
       await _repository.addVehicle(
-        type: _selectedType.name,
+        type: _selectedType.apiValue,
         plateNumber: _plateController.text.trim(),
         capacityKg: int.parse(_capacityController.text.trim()),
       );

@@ -1,65 +1,24 @@
 import '../../../core/errors/errors.dart';
+import '../../../core/models/user/profile.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/network/auth_interceptor.dart';
 import '../../auth/data/auth_repository.dart';
 
-/// Model for GET /me/profile and PATCH /me/profile response.
-class UserProfile {
-  const UserProfile({
-    required this.id,
-    required this.userId,
-    this.firstName,
-    this.lastName,
-    this.phoneNumber,
-    this.createdAt,
-    this.updatedAt,
-  });
-
-  final String id;
-  final String userId;
-  final String? firstName;
-  final String? lastName;
-  final String? phoneNumber;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      firstName: json['firstName'] as String?,
-      lastName: json['lastName'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
-      createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'].toString())
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.tryParse(json['updatedAt'].toString())
-          : null,
-    );
-  }
-
-  String get displayName {
-    final parts = [firstName, lastName].where((p) => p != null && p.isNotEmpty);
-    return parts.isNotEmpty ? parts.join(' ') : '';
-  }
-}
-
 /// Repository for user profile endpoints under /me.
 ///
 /// Handles:
-/// - GET  /me/profile   — fetch current user profile (404 if not yet created)
-/// - PATCH /me/profile  — create or update profile fields
+/// - GET  /me/profile       — fetch current user profile (404 if not yet created)
+/// - PATCH /me/profile      — create or update profile fields
+/// - POST /me/profile-photo — confirm profile photo upload
 class ProfileRepository {
-  ProfileRepository({
-    ApiClient? apiClient,
-    AuthRepository? authRepository,
-  }) : _apiClient = apiClient ??
-            ApiClient(
-              authInterceptor: authRepository != null
-                  ? AuthInterceptor(authRepository: authRepository)
-                  : null,
-            );
+  ProfileRepository({ApiClient? apiClient, AuthRepository? authRepository})
+    : _apiClient =
+          apiClient ??
+          ApiClient(
+            authInterceptor: AuthInterceptor(
+              authRepository: authRepository ?? AuthRepository(),
+            ),
+          );
 
   final ApiClient _apiClient;
 
@@ -67,13 +26,13 @@ class ProfileRepository {
   ///
   /// GET /me/profile
   /// Returns null (404) if the profile has not been created yet.
-  Future<Result<UserProfile?>> getProfile() async {
-    return _safeCall<UserProfile?>(() async {
+  Future<Result<Profile?>> getProfile() async {
+    return _safeCall<Profile?>(() async {
       try {
         final response = await _apiClient.getJson('/me/profile');
         final profileData = response['profile'] as Map<String, dynamic>?;
         if (profileData == null) return null;
-        return UserProfile.fromJson(profileData);
+        return Profile.fromJson(profileData);
       } on ApiException catch (e) {
         if (e.statusCode == 404) return null;
         rethrow;
@@ -85,7 +44,7 @@ class ProfileRepository {
   ///
   /// PATCH /me/profile
   /// At least one field must be provided.
-  Future<Result<UserProfile>> updateProfile({
+  Future<Result<Profile>> updateProfile({
     String? firstName,
     String? lastName,
     String? phoneNumber,
@@ -98,7 +57,24 @@ class ProfileRepository {
 
       final response = await _apiClient.patchJson('/me/profile', body: body);
       final profileData = response['profile'] as Map<String, dynamic>;
-      return UserProfile.fromJson(profileData);
+      return Profile.fromJson(profileData);
+    });
+  }
+
+  /// Confirm profile photo upload.
+  ///
+  /// POST /me/profile-photo
+  /// After uploading the file via the presigned URL from `/files/init`,
+  /// call this to confirm and attach it to the profile.
+  Future<Result<void>> confirmProfilePhoto({
+    required String key,
+    String? checksum,
+  }) async {
+    return _safeCall(() async {
+      await _apiClient.postJson(
+        '/me/profile-photo',
+        body: {'key': key, if (checksum != null) 'checksum': checksum},
+      );
     });
   }
 

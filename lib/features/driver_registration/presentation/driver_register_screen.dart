@@ -78,7 +78,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
 
     final vehicles = _vehicles
         .map((v) => {
-              'type': v.type.name,
+              'type': v.type.apiValue,
               'plateNumber': v.plateController.text.trim(),
               'capacityKg': int.tryParse(v.capacityController.text.trim()) ?? 0,
             })
@@ -277,7 +277,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
           LabeledTextField(
             label: 'Şifre',
             controller: _passwordController,
-            hint: 'En az 6 karakter',
+            hint: 'En az 8 karakter',
             obscureText: _obscurePassword,
             textInputAction: TextInputAction.next,
             isRequired: true,
@@ -291,7 +291,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) return 'Şifre gerekli';
-              if (value.length < 6) return 'Şifre en az 6 karakter olmalı';
+              if (value.length < 8) return 'Şifre en az 8 karakter olmalı';
               return null;
             },
           ),

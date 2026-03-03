@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/models/driver/driver.dart';
 import '../../../core/models/driver/driver_status.dart';
@@ -7,10 +7,8 @@ import '../../../core/models/driver/vehicle.dart';
 import '../../../theme/extensions/theme_context_extensions.dart';
 import '../../../ui/atoms/app_button.dart';
 import '../../../ui/atoms/app_text.dart';
-import '../../../features/auth/presentation/auth_notifier.dart';
 import '../../../routing/route_paths.dart';
 import '../data/driver_dashboard_repository.dart';
-import 'package:go_router/go_router.dart';
 
 /// Driver dashboard screen showing approval status, vehicle list, and controls.
 class DriverDashboardScreen extends StatefulWidget {
@@ -86,20 +84,6 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pano'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final authNotifier = Provider.of<AuthNotifier>(
-                context,
-                listen: false,
-              );
-              authNotifier.logout();
-              context.go(AppRoutes.login);
-            },
-            icon: const Icon(Icons.logout),
-            tooltip: 'Çıkış',
-          ),
-        ],
       ),
       body: _error != null
           ? Center(

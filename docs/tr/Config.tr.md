@@ -69,7 +69,7 @@ class AppConfig {
   ///
   /// In a real project, consider using flavors or `--dart-define` to override
   /// this per environment (dev, staging, prod).
-  static const String apiBaseUrl = 'http://localhost:3000';
+  static const String apiBaseUrl = 'https://naklet-api.ituacm.com';
 }
 ```
 
@@ -85,7 +85,7 @@ Bu değer genellikle `ApiClient` oluşturulurken kullanılır.
 2. `apiBaseUrl` değerini güncelleyin:
 
 ```dart
-static const String apiBaseUrl = 'http://localhost:3000';
+static const String apiBaseUrl = 'https://naklet-api.ituacm.com';
 // veya LAN üzerinde çalışan bir backend için:
 // 'http://192.168.1.50:3000'
 ```
@@ -143,4 +143,3 @@ kullanılabilir. Bu boilerplate, basit kalmak için tek bir `AppConfig` sınıf�
 
 - Config: `lib/core/config/app_config.dart`
 - Network kullanım yeri: `lib/core/network/api_client.dart`
-

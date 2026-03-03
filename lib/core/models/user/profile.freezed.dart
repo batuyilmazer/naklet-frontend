@@ -21,10 +21,12 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Profile {
+  String get id => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
-  String? get displayName => throw _privateConstructorUsedError;
-  String? get avatarUrl => throw _privateConstructorUsedError;
-  String? get bio => throw _privateConstructorUsedError;
+  String? get firstName => throw _privateConstructorUsedError;
+  String? get lastName => throw _privateConstructorUsedError;
+  String? get phoneNumber => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Profile to a JSON map.
@@ -42,10 +44,12 @@ abstract class $ProfileCopyWith<$Res> {
       _$ProfileCopyWithImpl<$Res, Profile>;
   @useResult
   $Res call({
+    String id,
     String userId,
-    String? displayName,
-    String? avatarUrl,
-    String? bio,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    DateTime? createdAt,
     DateTime? updatedAt,
   });
 }
@@ -65,30 +69,40 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? userId = null,
-    Object? displayName = freezed,
-    Object? avatarUrl = freezed,
-    Object? bio = freezed,
+    Object? firstName = freezed,
+    Object? lastName = freezed,
+    Object? phoneNumber = freezed,
+    Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
     return _then(
       _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
             userId: null == userId
                 ? _value.userId
                 : userId // ignore: cast_nullable_to_non_nullable
                       as String,
-            displayName: freezed == displayName
-                ? _value.displayName
-                : displayName // ignore: cast_nullable_to_non_nullable
+            firstName: freezed == firstName
+                ? _value.firstName
+                : firstName // ignore: cast_nullable_to_non_nullable
                       as String?,
-            avatarUrl: freezed == avatarUrl
-                ? _value.avatarUrl
-                : avatarUrl // ignore: cast_nullable_to_non_nullable
+            lastName: freezed == lastName
+                ? _value.lastName
+                : lastName // ignore: cast_nullable_to_non_nullable
                       as String?,
-            bio: freezed == bio
-                ? _value.bio
-                : bio // ignore: cast_nullable_to_non_nullable
+            phoneNumber: freezed == phoneNumber
+                ? _value.phoneNumber
+                : phoneNumber // ignore: cast_nullable_to_non_nullable
                       as String?,
+            createdAt: freezed == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
             updatedAt: freezed == updatedAt
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -108,10 +122,12 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   @override
   @useResult
   $Res call({
+    String id,
     String userId,
-    String? displayName,
-    String? avatarUrl,
-    String? bio,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    DateTime? createdAt,
     DateTime? updatedAt,
   });
 }
@@ -130,30 +146,40 @@ class __$$ProfileImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? userId = null,
-    Object? displayName = freezed,
-    Object? avatarUrl = freezed,
-    Object? bio = freezed,
+    Object? firstName = freezed,
+    Object? lastName = freezed,
+    Object? phoneNumber = freezed,
+    Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
     return _then(
       _$ProfileImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
         userId: null == userId
             ? _value.userId
             : userId // ignore: cast_nullable_to_non_nullable
                   as String,
-        displayName: freezed == displayName
-            ? _value.displayName
-            : displayName // ignore: cast_nullable_to_non_nullable
+        firstName: freezed == firstName
+            ? _value.firstName
+            : firstName // ignore: cast_nullable_to_non_nullable
                   as String?,
-        avatarUrl: freezed == avatarUrl
-            ? _value.avatarUrl
-            : avatarUrl // ignore: cast_nullable_to_non_nullable
+        lastName: freezed == lastName
+            ? _value.lastName
+            : lastName // ignore: cast_nullable_to_non_nullable
                   as String?,
-        bio: freezed == bio
-            ? _value.bio
-            : bio // ignore: cast_nullable_to_non_nullable
+        phoneNumber: freezed == phoneNumber
+            ? _value.phoneNumber
+            : phoneNumber // ignore: cast_nullable_to_non_nullable
                   as String?,
+        createdAt: freezed == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
         updatedAt: freezed == updatedAt
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -167,10 +193,12 @@ class __$$ProfileImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProfileImpl implements _Profile {
   const _$ProfileImpl({
+    required this.id,
     required this.userId,
-    this.displayName,
-    this.avatarUrl,
-    this.bio,
+    this.firstName,
+    this.lastName,
+    this.phoneNumber,
+    this.createdAt,
     this.updatedAt,
   });
 
@@ -178,19 +206,23 @@ class _$ProfileImpl implements _Profile {
       _$$ProfileImplFromJson(json);
 
   @override
+  final String id;
+  @override
   final String userId;
   @override
-  final String? displayName;
+  final String? firstName;
   @override
-  final String? avatarUrl;
+  final String? lastName;
   @override
-  final String? bio;
+  final String? phoneNumber;
+  @override
+  final DateTime? createdAt;
   @override
   final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'Profile(userId: $userId, displayName: $displayName, avatarUrl: $avatarUrl, bio: $bio, updatedAt: $updatedAt)';
+    return 'Profile(id: $id, userId: $userId, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -198,20 +230,32 @@ class _$ProfileImpl implements _Profile {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.displayName, displayName) ||
-                other.displayName == displayName) &&
-            (identical(other.avatarUrl, avatarUrl) ||
-                other.avatarUrl == avatarUrl) &&
-            (identical(other.bio, bio) || other.bio == bio) &&
+            (identical(other.firstName, firstName) ||
+                other.firstName == firstName) &&
+            (identical(other.lastName, lastName) ||
+                other.lastName == lastName) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, userId, displayName, avatarUrl, bio, updatedAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    userId,
+    firstName,
+    lastName,
+    phoneNumber,
+    createdAt,
+    updatedAt,
+  );
 
   /// Create a copy of Profile
   /// with the given fields replaced by the non-null parameter values.
@@ -229,23 +273,29 @@ class _$ProfileImpl implements _Profile {
 
 abstract class _Profile implements Profile {
   const factory _Profile({
+    required final String id,
     required final String userId,
-    final String? displayName,
-    final String? avatarUrl,
-    final String? bio,
+    final String? firstName,
+    final String? lastName,
+    final String? phoneNumber,
+    final DateTime? createdAt,
     final DateTime? updatedAt,
   }) = _$ProfileImpl;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
   @override
+  String get id;
+  @override
   String get userId;
   @override
-  String? get displayName;
+  String? get firstName;
   @override
-  String? get avatarUrl;
+  String? get lastName;
   @override
-  String? get bio;
+  String? get phoneNumber;
+  @override
+  DateTime? get createdAt;
   @override
   DateTime? get updatedAt;
 

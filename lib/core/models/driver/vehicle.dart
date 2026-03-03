@@ -10,7 +10,7 @@ class Vehicle {
     required this.type,
     required this.plateNumber,
     required this.capacityKg,
-    this.isActive = true,
+    this.isActive = false,
     this.lat,
     this.lng,
     required this.driverId,
@@ -40,7 +40,7 @@ class Vehicle {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'type': type.name,
+    'type': type.apiValue,
     'plateNumber': plateNumber,
     'capacityKg': capacityKg,
     'isActive': isActive,

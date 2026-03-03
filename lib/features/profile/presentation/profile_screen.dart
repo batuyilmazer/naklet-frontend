@@ -56,7 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 label: 'Email verified',
                 value: user.emailVerified.toString(),
               ),
-              _Row(label: 'Suspended', value: user.isSuspended.toString()),
               _Row(
                 label: 'Last login',
                 value: user.lastLoginAt?.toIso8601String() ?? '—',

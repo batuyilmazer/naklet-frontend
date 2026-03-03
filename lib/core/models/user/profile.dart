@@ -1,5 +1,5 @@
-/// Profile model for extensible user profile data.
-/// Separate from [User] (auth/core fields); can be extended with displayName, avatar, bio, etc.
+/// Profile model aligned with backend Prisma schema.
+/// Backend returns: { id, firstName, lastName, phoneNumber, userId, createdAt, updatedAt }
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -9,10 +9,12 @@ part 'profile.g.dart';
 @freezed
 class Profile with _$Profile {
   const factory Profile({
+    required String id,
     required String userId,
-    String? displayName,
-    String? avatarUrl,
-    String? bio,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    DateTime? createdAt,
     DateTime? updatedAt,
   }) = _Profile;
 
