@@ -1,5 +1,5 @@
-for Backend: [arcaerdogar/naklet-backend](https://github.com/arcaerdogar/naklet-backend "arcaerdogar/naklet-backend")
----
+*fBackend: [arcaerdogar/naklet-backend](https://github.com/arcaerdogar/naklet-backend "arcaerdogar/naklet-backend")*
+
 # 🚚 Naklet.net | Akıllı Nakliye Çözümleri - Proje Özeti
 
 Naklet.net, yük taşıtmak isteyenlerle profesyonel sürücüleri **konum tabanlı** bir ekosistemde buluşturan, lojistik süreçlerini dijitalleştiren bir pazaryeri platformudur.
