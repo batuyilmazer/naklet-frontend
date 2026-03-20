@@ -1,4 +1,4 @@
-*fBackend: [arcaerdogar/naklet-backend](https://github.com/arcaerdogar/naklet-backend "arcaerdogar/naklet-backend")*
+*Backend: [arcaerdogar/naklet-backend](https://github.com/arcaerdogar/naklet-backend "arcaerdogar/naklet-backend")*
 
 # 🚚 Naklet.net | Akıllı Nakliye Çözümleri - Proje Özeti
 
