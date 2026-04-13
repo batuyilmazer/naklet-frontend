@@ -40,33 +40,33 @@ class DefaultTypographyScheme extends AppTypographyScheme {
     : super(
         headline: const TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 24,
-          letterSpacing: -0.5,
+          fontSize: 28,
+          letterSpacing: -0.8,
         ),
         title: const TextStyle(
           fontWeight: FontWeight.w600,
-          fontSize: 18,
+          fontSize: 19,
           letterSpacing: 0,
         ),
         body: const TextStyle(
           fontWeight: FontWeight.normal,
-          fontSize: 14,
+          fontSize: 15,
           letterSpacing: 0,
         ),
         bodySmall: const TextStyle(
           fontWeight: FontWeight.normal,
-          fontSize: 13,
+          fontSize: 13.5,
           letterSpacing: 0,
         ),
         button: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 14,
-          letterSpacing: 0.1,
+          letterSpacing: 0.15,
         ),
         caption: const TextStyle(
           fontWeight: FontWeight.normal,
           fontSize: 12,
-          letterSpacing: 0.2,
+          letterSpacing: 0.25,
         ),
       );
 }

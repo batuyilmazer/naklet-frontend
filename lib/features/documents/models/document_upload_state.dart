@@ -15,12 +15,12 @@ enum DocumentUploadState {
 extension DocumentUploadStateX on DocumentUploadState {
   String get label {
     return switch (this) {
-      DocumentUploadState.idle => 'Henüz seçilmedi',
-      DocumentUploadState.selected => 'Dosya seçildi',
-      DocumentUploadState.uploadingInit => 'Hazırlanıyor',
-      DocumentUploadState.uploadingBinary => 'Yükleniyor',
-      DocumentUploadState.confirming => 'Onaylanıyor',
-      DocumentUploadState.success => 'Tamamlandı',
+      DocumentUploadState.idle => 'Henuz pati izi yok',
+      DocumentUploadState.selected => 'Kanit secildi',
+      DocumentUploadState.uploadingInit => 'Rozet hazirlaniyor',
+      DocumentUploadState.uploadingBinary => 'Miriltili yukleme suruyor',
+      DocumentUploadState.confirming => 'Mahalleye duyuruluyor',
+      DocumentUploadState.success => 'Rozet tamam',
       DocumentUploadState.failed => 'Hata',
     };
   }

@@ -7,6 +7,7 @@ import '../../../routing/route_paths.dart';
 import '../../../core/models/driver/driver.dart';
 import '../../../theme/extensions/theme_context_extensions.dart';
 import '../../../ui/atoms/app_text.dart';
+import '../../../ui/cat_theme/cat_theme.dart';
 import '../data/driver_dashboard_repository.dart';
 
 /// Driver profile viewing screen.
@@ -53,17 +54,15 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     final radius = context.appRadius;
 
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_driver == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Profil')),
+        appBar: AppBar(title: const Text('Pati Kimlik')),
         body: Center(
           child: AppText.bodySmall(
-            'Profil yüklenemedi',
+            'Profil yuklenemedi',
             color: colors.textSecondary,
           ),
         ),
@@ -72,7 +71,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profil'),
+        title: const Text('Pati Kimlik'),
         actions: [
           IconButton(
             onPressed: () {
@@ -81,10 +80,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 listen: false,
               );
               authNotifier.logout();
-              context.go(AppRoutes.login);
+              context.go(AppRoutes.landing);
             },
             icon: const Icon(Icons.logout),
-            tooltip: 'Çıkış',
+            tooltip: 'Kulubeden cik',
           ),
         ],
       ),
@@ -96,19 +95,15 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             CircleAvatar(
               radius: 48,
               backgroundColor: colors.primary.withValues(alpha: 0.1),
-              child: Icon(
-                Icons.person,
-                size: 48,
-                color: colors.primary,
-              ),
+              child: Icon(Icons.pets, size: 48, color: colors.primary),
             ),
             SizedBox(height: spacing.s16),
             Text(
-              'Sürücü Profili',
+              'Mahalledeki Kedi Kimligin',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: colors.textPrimary,
-                  ),
+                fontWeight: FontWeight.w600,
+                color: colors.textPrimary,
+              ),
             ),
             SizedBox(height: spacing.s4),
             AppText.bodySmall(
@@ -127,29 +122,29 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                   children: [
                     _profileRow(
                       context,
-                      Icons.person_outline,
-                      'Ad',
+                      Icons.pets_outlined,
+                      'Pati adi',
                       _driver!.firstName ?? '—',
                     ),
                     Divider(height: spacing.s24),
                     _profileRow(
                       context,
                       Icons.person,
-                      'Soyad',
+                      'Mahalle lakabi',
                       _driver!.lastName ?? '—',
                     ),
                     Divider(height: spacing.s24),
                     _profileRow(
                       context,
                       Icons.phone_outlined,
-                      'Telefon',
+                      'Miyav hatti',
                       _driver!.phoneNumber ?? '—',
                     ),
                     Divider(height: spacing.s24),
                     _profileRow(
                       context,
                       Icons.badge_outlined,
-                      'Durum',
+                      'Koloni durumu',
                       _driver!.status.label,
                     ),
                     if (_driver!.rejectionReason != null) ...[
@@ -157,17 +152,32 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                       _profileRow(
                         context,
                         Icons.info_outline,
-                        'Red Sebebi',
+                        'Yaramazlik notu',
                         _driver!.rejectionReason!,
                       ),
                     ],
                     Divider(height: spacing.s24),
                     _profileRow(
                       context,
-                      Icons.local_shipping,
-                      'Araç Sayısı',
+                      Icons.pets,
+                      'Pati profili sayisi',
                       '${_driver!.vehicles.length}',
                     ),
+                    if (_driver!.vehicles.isNotEmpty) ...[
+                      Divider(height: spacing.s24),
+                      _profileRow(
+                        context,
+                        Icons.auto_awesome,
+                        'En populer profil',
+                        CatThemeCopy.vehicleProfile(
+                          _driver!.vehicles.first,
+                          humanName: CatThemeCopy.humanDisplayName(
+                            _driver!.firstName,
+                            _driver!.lastName,
+                          ),
+                        ).nickname,
+                      ),
+                    ],
                   ],
                 ),
               ),

@@ -4,10 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/errors/result.dart';
+import '../../../core/models/driver/vehicle.dart';
 import '../../../core/models/driver/vehicle_type.dart';
 import '../../../theme/extensions/theme_context_extensions.dart';
 import '../../../ui/atoms/app_button.dart';
 import '../../../ui/atoms/app_text.dart';
+import '../../../ui/cat_theme/cat_theme.dart';
 import '../../../ui/molecules/labeled_text_field.dart';
 import '../../../features/auth/presentation/auth_notifier.dart';
 import '../data/driver_register_repository.dart';
@@ -77,11 +79,13 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
     });
 
     final vehicles = _vehicles
-        .map((v) => {
-              'type': v.type.apiValue,
-              'plateNumber': v.plateController.text.trim(),
-              'capacityKg': int.tryParse(v.capacityController.text.trim()) ?? 0,
-            })
+        .map(
+          (v) => {
+            'type': v.type.apiValue,
+            'plateNumber': v.plateController.text.trim(),
+            'capacityKg': int.tryParse(v.capacityController.text.trim()) ?? 0,
+          },
+        )
         .toList();
 
     final result = await _repository.register(
@@ -151,10 +155,10 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sürücü Kaydı'),
+        title: const Text('Sokak Kedisi Kaydi'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go(AppRoutes.login),
+          onPressed: () => context.go(AppRoutes.landing),
         ),
       ),
       body: Column(
@@ -193,7 +197,9 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                     children: [
                       Expanded(
                         child: AppButton(
-                          label: _currentStep == 2 ? 'Kayıt Ol' : 'Devam',
+                          label: _currentStep == 2
+                              ? 'Koloniye Katil'
+                              : 'Devam Et',
                           onPressed: _isLoading ? null : details.onStepContinue,
                           isLoading: _isLoading && _currentStep == 2,
                           isFullWidth: true,
@@ -216,8 +222,8 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
               },
               steps: [
                 Step(
-                  title: const Text('Hesap Bilgileri'),
-                  subtitle: const Text('Email ve şifre'),
+                  title: const Text('Kulube Hesabi'),
+                  subtitle: const Text('Email ve gizli miyav sifresi'),
                   isActive: _currentStep >= 0,
                   state: _currentStep > 0
                       ? StepState.complete
@@ -225,8 +231,8 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                   content: _buildAccountStep(),
                 ),
                 Step(
-                  title: const Text('Profil Bilgileri'),
-                  subtitle: const Text('Ad, soyad, telefon'),
+                  title: const Text('Kedi Kimligi'),
+                  subtitle: const Text('Pati adi, mahalle lakabi, miyav hatti'),
                   isActive: _currentStep >= 1,
                   state: _currentStep > 1
                       ? StepState.complete
@@ -234,8 +240,8 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                   content: _buildProfileStep(),
                 ),
                 Step(
-                  title: const Text('Araç Bilgileri'),
-                  subtitle: const Text('En az 1 araç gerekli'),
+                  title: const Text('Pati Ozellikleri'),
+                  subtitle: const Text('En az 1 kedi profili gerekli'),
                   isActive: _currentStep >= 2,
                   state: _currentStep > 2
                       ? StepState.complete
@@ -277,7 +283,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
           LabeledTextField(
             label: 'Şifre',
             controller: _passwordController,
-            hint: 'En az 8 karakter',
+            hint: 'En az 8 karakterlik gizli miyav',
             obscureText: _obscurePassword,
             textInputAction: TextInputAction.next,
             isRequired: true,
@@ -297,9 +303,9 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
           ),
           SizedBox(height: spacing.s16),
           LabeledTextField(
-            label: 'Şifre Tekrar',
+            label: 'Sifre Tekrar',
             controller: _confirmPasswordController,
-            hint: 'Şifrenizi tekrar girin',
+            hint: 'Gizli miyavi tekrar yazin',
             obscureText: _obscureConfirm,
             textInputAction: TextInputAction.done,
             isRequired: true,
@@ -334,35 +340,37 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
       child: Column(
         children: [
           LabeledTextField(
-            label: 'Ad',
+            label: 'Pati adi',
             controller: _firstNameController,
-            hint: 'Adınız',
+            hint: 'Boncuk',
             textInputAction: TextInputAction.next,
             isRequired: true,
             prefixIcon: const Icon(Icons.person_outline),
             validator: (value) {
-              if (value == null || value.isEmpty) return 'Ad gerekli';
+              if (value == null || value.isEmpty) return 'Pati adi gerekli';
               return null;
             },
           ),
           SizedBox(height: spacing.s16),
           LabeledTextField(
-            label: 'Soyad',
+            label: 'Mahalle lakabi',
             controller: _lastNameController,
-            hint: 'Soyadınız',
+            hint: 'Apartman golgesi krali',
             textInputAction: TextInputAction.next,
             isRequired: true,
             prefixIcon: const Icon(Icons.person_outline),
             validator: (value) {
-              if (value == null || value.isEmpty) return 'Soyad gerekli';
+              if (value == null || value.isEmpty) {
+                return 'Mahalle lakabi gerekli';
+              }
               return null;
             },
           ),
           SizedBox(height: spacing.s16),
           LabeledTextField(
-            label: 'Telefon',
+            label: 'Miyav hatti',
             controller: _phoneController,
-            hint: '05XX XXX XX XX',
+            hint: 'Bir insan seni bu numaradan bulsun',
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.done,
             isRequired: true,
@@ -370,9 +378,9 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Telefon numarası gerekli';
+                return 'Miyav hatti gerekli';
               }
-              if (value.length < 10) return 'Geçerli bir telefon girin';
+              if (value.length < 10) return 'Gecerli bir iletisim hatti girin';
               return null;
             },
           ),
@@ -402,7 +410,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
           OutlinedButton.icon(
             onPressed: _addVehicle,
             icon: const Icon(Icons.add),
-            label: const Text('Araç Ekle'),
+            label: const Text('Bir Pati Profili Daha Ekle'),
             style: OutlinedButton.styleFrom(
               padding: EdgeInsets.symmetric(
                 vertical: spacing.s12,
@@ -419,6 +427,15 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
     final spacing = context.appSpacing;
     final colors = context.appColors;
     final vehicle = _vehicles[index];
+    final suggestedType = CatThemeCopy.vehicleProfile(
+      Vehicle(
+        id: '$index-preview',
+        type: vehicle.type,
+        plateNumber: vehicle.plateController.text,
+        capacityKg: int.tryParse(vehicle.capacityController.text) ?? 4,
+        driverId: 'preview',
+      ),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,7 +444,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             AppText.bodySmall(
-              'Araç ${index + 1}',
+              'Pati Profili ${index + 1}',
               color: colors.textPrimary,
             ),
             if (_vehicles.length > 1)
@@ -444,17 +461,15 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
         DropdownButtonFormField<VehicleType>(
           initialValue: vehicle.type,
           decoration: InputDecoration(
-            labelText: 'Araç Tipi *',
-            prefixIcon: const Icon(Icons.local_shipping_outlined),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            labelText: 'Pati karakteri *',
+            prefixIcon: const Icon(Icons.pets_outlined),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
           items: VehicleType.values
-              .map((type) => DropdownMenuItem(
-                    value: type,
-                    child: Text(type.label),
-                  ))
+              .map(
+                (type) =>
+                    DropdownMenuItem(value: type, child: Text(type.label)),
+              )
               .toList(),
           onChanged: (value) {
             if (value != null) {
@@ -464,33 +479,48 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
         ),
         SizedBox(height: spacing.s16),
         LabeledTextField(
-          label: 'Plaka',
+          label: 'Renk / lakap',
           controller: vehicle.plateController,
-          hint: '34 ABC 123',
+          hint: 'Tekir, citir bacak, gece golgesi...',
           textInputAction: TextInputAction.next,
           isRequired: true,
-          prefixIcon: const Icon(Icons.confirmation_number_outlined),
+          prefixIcon: const Icon(Icons.brush_outlined),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Plaka gerekli';
+            if (value == null || value.isEmpty) {
+              return 'Bir renk veya lakap yazin';
+            }
             return null;
           },
         ),
         SizedBox(height: spacing.s16),
         LabeledTextField(
-          label: 'Kapasite (kg)',
+          label: 'Tahmini kilo (kg)',
           controller: vehicle.capacityController,
-          hint: '1500',
+          hint: '4',
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.done,
           isRequired: true,
           prefixIcon: const Icon(Icons.scale_outlined),
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Kapasite gerekli';
+            if (value == null || value.isEmpty) return 'Tahmini kilo gerekli';
             final kg = int.tryParse(value);
-            if (kg == null || kg <= 0) return 'Geçerli bir kapasite girin';
+            if (kg == null || kg <= 0) return 'Gecerli bir kilo girin';
             return null;
           },
+        ),
+        SizedBox(height: spacing.s12),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(spacing.s12),
+          decoration: BoxDecoration(
+            color: colors.surfaceVariant,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: AppText.caption(
+            'On izleme: ${suggestedType.nickname} · ${suggestedType.archetypeLabel}',
+            color: colors.textSecondary,
+          ),
         ),
       ],
     );

@@ -13,10 +13,10 @@ import '../route_paths.dart';
 
 /// Route definitions for the shell-based layout (bottom navigation).
 ///
-/// Naklet.net shell with 3 tabs:
-/// - Keşfet (Search): Public — accessible by guests and drivers
-/// - Pano (Dashboard): Driver only
-/// - Profil (Profile): Driver only
+/// PisiBul shell with 3 tabs:
+/// - Pati ara (Search): Public — accessible by guests and drivers
+/// - Koloni (Dashboard): Driver only
+/// - Kimlik (Profile): Driver only
 class ShellRoutes {
   static List<RouteBase> get routes => [
     ShellRoute(
@@ -62,19 +62,15 @@ class ShellRoutes {
   ];
 
   static List<ShellTabConfig> _buildShellTabs() => const [
+    ShellTabConfig(label: 'Pati Ara', icon: Icons.pets, path: AppRoutes.search),
     ShellTabConfig(
-      label: 'Keşfet',
-      icon: Icons.search,
-      path: AppRoutes.search,
-    ),
-    ShellTabConfig(
-      label: 'Pano',
-      icon: Icons.dashboard,
+      label: 'Koloni',
+      icon: Icons.grid_view_rounded,
       path: AppRoutes.driverDashboard,
     ),
     ShellTabConfig(
-      label: 'Profil',
-      icon: Icons.person,
+      label: 'Kimlik',
+      icon: Icons.badge_outlined,
       path: AppRoutes.driverProfile,
     ),
   ];

@@ -7,10 +7,10 @@ enum VehicleType {
 
   /// Display-friendly Turkish label.
   String get label => switch (this) {
-    kamyonet => 'Kamyonet',
-    panelvan => 'Panelvan',
-    kamyon => 'Kamyon',
-    tir => 'TIR',
+    kamyonet => 'Tekir Kosucu',
+    panelvan => 'Mahalle Gozcusu',
+    kamyon => 'Pofuduk Dev',
+    tir => 'Gece Avcisi',
   };
 
   /// Backend-compatible UPPERCASE value for serialization.

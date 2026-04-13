@@ -243,14 +243,14 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
 
       return selectedFile;
     } catch (_) {
-      _setError('Kamera ile belge alınırken bir hata oluştu.');
+      _setError('Kamera ile kanit alinurken bir hata olustu.');
       return null;
     }
   }
 
   Future<void> _handleUpload() async {
     if (!_hasAnySelection) {
-      _setError('Lütfen en az bir belge seçin.');
+      _setError('Lutfen en az bir rozet kaniti secin.');
       return;
     }
 
@@ -263,7 +263,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
         : _registrationFile;
 
     if (licenseToUpload == null && registrationToUpload == null) {
-      _setError('Yüklenecek yeni belge bulunmuyor.');
+      _setError('Yuklenecek yeni rozet kaniti bulunmuyor.');
       return;
     }
 
@@ -305,14 +305,14 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
     final colors = context.appColors;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Belge Yükleme')),
+      appBar: AppBar(title: const Text('Guven Rozetleri')),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(spacing.s16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppText.bodySmall(
-              'Hesabınızın onaylanması için aşağıdaki belgeleri yükleyin.',
+              'Mahallede guvenilir sokak kedisi rozeti almak icin asagidaki kanitlari birak.',
               color: colors.textSecondary,
             ),
             SizedBox(height: spacing.s16),
@@ -342,8 +342,8 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
             _buildDocumentCard(
               context,
               type: DriverDocumentType.license,
-              title: 'Ehliyet',
-              subtitle: 'Sürücü belgesi fotoğrafı veya PDF',
+              title: 'Asi Karnesi',
+              subtitle: 'Mahalleye guven veren bir foto ya da PDF',
               icon: Icons.badge_outlined,
               selectedFile: _licenseFile,
               status: _licenseStatus,
@@ -353,8 +353,8 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
             _buildDocumentCard(
               context,
               type: DriverDocumentType.registration,
-              title: 'Araç Ruhsatı',
-              subtitle: 'Ruhsat fotoğrafı veya PDF',
+              title: 'Mama Referansi',
+              subtitle: 'Beni seven insanlarin kaniti ya da PDF',
               icon: Icons.description_outlined,
               selectedFile: _registrationFile,
               status: _registrationStatus,
@@ -362,7 +362,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
             ),
             SizedBox(height: spacing.s24),
             AppButton(
-              label: 'Belgeleri Yükle',
+              label: 'Rozetleri Gonder',
               onPressed: _isUploading ? null : _handleUpload,
               isLoading: _isUploading,
               isFullWidth: true,
@@ -462,7 +462,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                 OutlinedButton.icon(
                   onPressed: _isUploading ? null : () => _pickDocument(type),
                   icon: const Icon(Icons.attach_file),
-                  label: const Text('Dosya Seç'),
+                  label: const Text('Kanit Sec'),
                 ),
                 if (_supportsCamera)
                   OutlinedButton.icon(
@@ -470,7 +470,7 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
                         ? null
                         : () => _captureDocument(type),
                     icon: const Icon(Icons.photo_camera_outlined),
-                    label: const Text('Kamera'),
+                    label: const Text('Foto Cek'),
                   ),
               ],
             ),
@@ -499,18 +499,18 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
 
   void _applyUploadSummary(DocumentUploadResult result) {
     if (result.isCompleteSuccess) {
-      _success = 'Belgeler başarıyla yüklendi.';
+      _success = 'Rozet kanitlari basariyla gonderildi.';
       _error = null;
       return;
     }
 
     if (result.isPartialSuccess) {
-      _success = 'Bazı belgeler yüklendi. Başarısız belgeleri tekrar deneyin.';
+      _success = 'Bazi rozet kanitlari gitti. Eksik kalanlari yeniden deneyin.';
       _error = _formatFailedDocuments(result.failedDocuments);
       return;
     }
 
-    _success = 'Belgeler işlendi.';
+    _success = 'Rozet kanitlari islendi.';
   }
 
   String _formatFailedDocuments(
@@ -523,8 +523,8 @@ class _DocumentUploadScreenState extends State<DocumentUploadScreen> {
 
   String _documentLabel(DriverDocumentType type) {
     return switch (type) {
-      DriverDocumentType.license => 'Ehliyet',
-      DriverDocumentType.registration => 'Araç ruhsatı',
+      DriverDocumentType.license => 'Asi karnesi',
+      DriverDocumentType.registration => 'Mama referansi',
     };
   }
 

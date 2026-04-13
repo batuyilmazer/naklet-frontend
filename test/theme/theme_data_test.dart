@@ -11,9 +11,9 @@ void main() {
       final theme = AppThemeData.light();
 
       expect(theme.colors, isA<LightColorScheme>());
-      expect(theme.colors.primary, const Color(0xFF18181B));
-      expect(theme.colors.background, const Color(0xFFFFFFFF));
-      expect(theme.typography.headline.fontSize, 24);
+      expect(theme.colors.primary, const Color(0xFFCC5A2E));
+      expect(theme.colors.background, const Color(0xFFFFF8F0));
+      expect(theme.typography.headline.fontSize, 28);
       expect(theme.spacing.s4, 4);
       expect(theme.radius.small, 6);
     });
@@ -22,9 +22,9 @@ void main() {
       final theme = AppThemeData.dark();
 
       expect(theme.colors, isA<DarkColorScheme>());
-      expect(theme.colors.background, const Color(0xFF09090B));
-      expect(theme.colors.textPrimary, const Color(0xFFFAFAFA));
-      expect(theme.typography.headline.fontSize, 24);
+      expect(theme.colors.background, const Color(0xFF17110D));
+      expect(theme.colors.textPrimary, const Color(0xFFFFF1E4));
+      expect(theme.typography.headline.fontSize, 28);
       expect(theme.spacing.s4, 4);
       expect(theme.radius.small, 6);
     });

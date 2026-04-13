@@ -11,6 +11,7 @@ import 'routing/app_router.dart';
 import 'theme/extensions/theme_data_extensions.dart';
 import 'theme/theme_data.dart';
 import 'theme/theme_notifier.dart';
+import 'ui/cat_theme/cat_theme.dart';
 
 void main() {
   GlobalErrorHandler.init();
@@ -19,6 +20,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  static const double _phoneMaxWidth = 430;
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +48,35 @@ class MyApp extends StatelessWidget {
             mode: RoutingMode.shell,
           );
           return MaterialApp.router(
-            title: 'Naklet.net',
+            title: CatThemeCopy.appName,
             theme: AppThemeData.light().toThemeData(),
             darkTheme: AppThemeData.dark().toThemeData(),
             themeMode: themeNotifier.themeMode,
             routerConfig: router,
+            builder: (context, child) {
+              final appContent = child ?? const SizedBox.shrink();
+
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth <= _phoneMaxWidth) {
+                    return appContent;
+                  }
+
+                  return ColoredBox(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: _phoneMaxWidth,
+                        ),
+                        child: appContent,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
             debugShowCheckedModeBanner: false,
           );
         },

@@ -5,7 +5,9 @@ import '../../../core/models/driver/vehicle_type.dart';
 import '../../../core/models/search/nearby_vehicle.dart';
 import '../../../theme/extensions/theme_context_extensions.dart';
 import '../../../ui/atoms/app_text.dart';
+import '../../../ui/cat_theme/cat_theme.dart';
 import '../../../routing/route_paths.dart';
+import '../../auth/presentation/auth_providers.dart';
 import '../data/search_repository.dart';
 import 'widgets/nearby_vehicle_card.dart';
 
@@ -52,7 +54,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<void> _search() async {
     if (_lat == null || _lng == null) {
-      setState(() => _error = 'Konum bilgisi alınamadı. Lütfen konum izni verin.');
+      setState(
+        () =>
+            _error = 'Mahalleyi tarayabilmem icin konum izni vermen gerekiyor.',
+      );
       return;
     }
 
@@ -77,7 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Arama sırasında bir hata oluştu.';
+          _error = 'Mahalle taramasi sirasinda bir aksilik oldu.';
           _isLoading = false;
         });
       }
@@ -104,23 +109,33 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isGuest = context.watchAuthNotifier().isGuest;
     final colors = context.appColors;
     final spacing = context.appSpacing;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Naklet.net'),
+        leading: isGuest
+            ? IconButton(
+                onPressed: () => context.push(AppRoutes.driverRegister),
+                icon: const Icon(Icons.pets_outlined),
+                tooltip: 'Sokak kedisi profili ac',
+              )
+            : null,
+        title: const Text(CatThemeCopy.appName),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: _search,
             icon: const Icon(Icons.refresh),
-            tooltip: 'Yenile',
+            tooltip: 'Mahalleyi yeniden tara',
           ),
         ],
       ),
       body: Column(
         children: [
+          _buildHeroBanner(context, isGuest),
+          // Filters section
           // Filters section
           Container(
             padding: EdgeInsets.symmetric(
@@ -141,13 +156,13 @@ class _SearchScreenState extends State<SearchScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Vehicle type chips
-                AppText.caption('Araç Tipi', color: colors.textSecondary),
+                AppText.caption('Pati karakteri', color: colors.textSecondary),
                 SizedBox(height: spacing.s8),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      _typeChip(context, null, 'Tümü'),
+                      _typeChip(context, null, 'Hepsi'),
                       SizedBox(width: spacing.s8),
                       for (final type in VehicleType.values) ...[
                         _typeChip(context, type, type.label),
@@ -160,7 +175,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 // Radius selector
                 Row(
                   children: [
-                    AppText.caption('Mesafe:', color: colors.textSecondary),
+                    AppText.caption(
+                      'Mirilti yaricapi:',
+                      color: colors.textSecondary,
+                    ),
                     SizedBox(width: spacing.s8),
                     Expanded(
                       child: SingleChildScrollView(
@@ -196,9 +214,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           // Results
-          Expanded(
-            child: _buildContent(colors, spacing),
-          ),
+          Expanded(child: _buildContent(colors, spacing)),
         ],
       ),
     );
@@ -216,11 +232,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.location_off_outlined,
-                size: 64,
-                color: colors.textSecondary,
-              ),
+              Icon(Icons.map_outlined, size: 64, color: colors.textSecondary),
               SizedBox(height: spacing.s16),
               AppText.bodySmall(
                 _error!,
@@ -231,7 +243,7 @@ class _SearchScreenState extends State<SearchScreen> {
               TextButton.icon(
                 onPressed: _requestLocationAndSearch,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Tekrar Dene'),
+                label: const Text('Mahalleyi yeniden tara'),
               ),
             ],
           ),
@@ -246,14 +258,10 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.search_off,
-                size: 64,
-                color: colors.textSecondary,
-              ),
+              Icon(Icons.pets_outlined, size: 64, color: colors.textSecondary),
               SizedBox(height: spacing.s16),
               AppText.bodySmall(
-                'Yakınınızda nakliyeci bulunamadı.\nMesafe filtresini artırmayı deneyin.',
+                'Yakinlarda simdilik takilan bir sokak kedisi gorunmuyor.\nYaricapi artirip yeniden deneyin.',
                 textAlign: TextAlign.center,
                 color: colors.textSecondary,
               ),
@@ -278,10 +286,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: NearbyVehicleCard(
               vehicle: vehicle,
               onTap: () {
-                context.push(
-                  AppRoutes.vehicleDetail,
-                  extra: vehicle,
-                );
+                context.push(AppRoutes.vehicleDetail, extra: vehicle);
               },
             ),
           );
@@ -304,6 +309,119 @@ class _SearchScreenState extends State<SearchScreen> {
         fontSize: 13,
       ),
       visualDensity: VisualDensity.compact,
+    );
+  }
+
+  Widget _buildHeroBanner(BuildContext context, bool isGuest) {
+    final colors = context.appColors;
+    final spacing = context.appSpacing;
+
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.fromLTRB(
+        spacing.s16,
+        spacing.s12,
+        spacing.s16,
+        spacing.s12,
+      ),
+      padding: EdgeInsets.all(spacing.s24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        gradient: LinearGradient(
+          colors: [
+            colors.primary.withValues(alpha: 0.18),
+            colors.surfaceVariant,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: colors.surface,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.pets, color: colors.primary),
+              ),
+              SizedBox(width: spacing.s12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText.caption(
+                      'Mahalle radarinda',
+                      color: colors.textSecondary,
+                    ),
+                    SizedBox(height: spacing.s4),
+                    Text(
+                      'Bugun kimi seveceksin?',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: colors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: spacing.s16),
+          AppText.bodySmall(
+            'Yakin sokak kedilerini karakterlerine, uzakliklarina ve mahalle dedikodusuna gore tarayin.',
+            color: colors.textSecondary,
+          ),
+          SizedBox(height: spacing.s16),
+          Wrap(
+            spacing: spacing.s8,
+            runSpacing: spacing.s8,
+            children: [
+              _heroChip(context, Icons.favorite_border, 'Sevgi icin hazir'),
+              _heroChip(
+                context,
+                Icons.location_on_outlined,
+                'Konuma gore sirali',
+              ),
+              if (isGuest)
+                _heroChip(
+                  context,
+                  Icons.add_home_outlined,
+                  'Kendi kedi profilini birak',
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _heroChip(BuildContext context, IconData icon, String label) {
+    final colors = context.appColors;
+    final spacing = context.appSpacing;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.s12,
+        vertical: spacing.s8,
+      ),
+      decoration: BoxDecoration(
+        color: colors.surface.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: colors.primary),
+          SizedBox(width: spacing.s6),
+          AppText.caption(label, color: colors.textPrimary),
+        ],
+      ),
     );
   }
 }

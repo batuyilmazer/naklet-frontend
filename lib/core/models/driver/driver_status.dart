@@ -6,9 +6,9 @@ enum DriverStatus {
 
   /// Display-friendly Turkish label.
   String get label => switch (this) {
-    pending => 'Onay Bekliyor',
-    approved => 'Onaylandı',
-    rejected => 'Reddedildi',
+    pending => 'Pati Incelemede',
+    approved => 'Sevilmeye Hazir',
+    rejected => 'Henuz Yaramaz',
   };
 
   /// Backend-compatible UPPERCASE value for serialization.

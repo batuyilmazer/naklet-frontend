@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_frontend_boilerplate/theme/theme_data.dart';
 import 'package:flutter_frontend_boilerplate/theme/theme_notifier.dart';
 import 'package:flutter_frontend_boilerplate/core/storage/preferences_storage.dart';
 
@@ -51,8 +52,11 @@ void main() {
       await notifier.setThemeMode(ThemeMode.light);
       final themeData = notifier.currentThemeData;
 
-      expect(themeData.colors.primary, const Color(0xFF18181B));
-      expect(themeData.colors.background, const Color(0xFFFFFFFF));
+      expect(themeData.colors.primary, AppThemeData.light().colors.primary);
+      expect(
+        themeData.colors.background,
+        AppThemeData.light().colors.background,
+      );
     });
 
     test('setThemeMode updates theme mode', () async {
@@ -184,8 +188,14 @@ void main() {
       await notifier.setThemeMode(ThemeMode.dark);
       final themeData = notifier.currentThemeData;
 
-      expect(themeData.colors.background, const Color(0xFF09090B));
-      expect(themeData.colors.textPrimary, const Color(0xFFFAFAFA));
+      expect(
+        themeData.colors.background,
+        AppThemeData.dark().colors.background,
+      );
+      expect(
+        themeData.colors.textPrimary,
+        AppThemeData.dark().colors.textPrimary,
+      );
     });
 
     test('currentThemeData returns light theme for system mode', () async {
@@ -195,7 +205,10 @@ void main() {
       // Set to system mode
       await notifier.setThemeMode(ThemeMode.system);
       final themeData = notifier.currentThemeData;
-      expect(themeData.colors.background, const Color(0xFFFFFFFF));
+      expect(
+        themeData.colors.background,
+        AppThemeData.light().colors.background,
+      );
     });
   });
 }

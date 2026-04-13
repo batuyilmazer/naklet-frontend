@@ -7,6 +7,7 @@ import '../../../core/models/driver/vehicle.dart';
 import '../../../theme/extensions/theme_context_extensions.dart';
 import '../../../ui/atoms/app_button.dart';
 import '../../../ui/atoms/app_text.dart';
+import '../../../ui/cat_theme/cat_theme.dart';
 import '../../../routing/route_paths.dart';
 import '../data/driver_dashboard_repository.dart';
 
@@ -47,7 +48,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Profil bilgileri yüklenemedi.';
+          _error = 'Kedi profili bilgileri yuklenemedi.';
           _isLoading = false;
         });
       }
@@ -64,7 +65,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Araç durumu güncellenemedi')),
+          const SnackBar(content: Text('Pati profili durumu guncellenemedi')),
         );
       }
     }
@@ -76,15 +77,11 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     final spacing = context.appSpacing;
 
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pano'),
-      ),
+      appBar: AppBar(title: const Text('Koloni Pano')),
       body: _error != null
           ? Center(
               child: Column(
@@ -97,7 +94,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                   TextButton.icon(
                     onPressed: _loadDriverData,
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Tekrar Dene'),
+                    label: const Text('Tekrar Tara'),
                   ),
                 ],
               ),
@@ -115,13 +112,13 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText.bodySmall(
-                        'Araçlarım',
+                        'Yayindaki pati profillerim',
                         color: colors.textPrimary,
                       ),
                       TextButton.icon(
                         onPressed: () => context.push(AppRoutes.addVehicle),
                         icon: const Icon(Icons.add, size: 18),
-                        label: const Text('Yeni Araç'),
+                        label: const Text('Yeni Profil'),
                       ),
                     ],
                   ),
@@ -138,8 +135,8 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                   // Documents button
                   OutlinedButton.icon(
                     onPressed: () => context.push(AppRoutes.documentUpload),
-                    icon: const Icon(Icons.upload_file),
-                    label: const Text('Belgelerimi Yükle'),
+                    icon: const Icon(Icons.verified_outlined),
+                    label: const Text('Guven Rozetlerini Yukle'),
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: spacing.s16),
                       shape: RoundedRectangleBorder(
@@ -159,26 +156,30 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     final radius = context.appRadius;
     final status = _driver?.status ?? DriverStatus.pending;
 
-    final (Color bgColor, Color textColor, IconData icon, String message) =
-        switch (status) {
+    final (
+      Color bgColor,
+      Color textColor,
+      IconData icon,
+      String message,
+    ) = switch (status) {
       DriverStatus.pending => (
-          Colors.orange.withValues(alpha: 0.1),
-          Colors.orange,
-          Icons.hourglass_top,
-          'Profiliniz inceleniyor. Admin onayı bekleniyor.',
-        ),
+        Colors.orange.withValues(alpha: 0.1),
+        Colors.orange,
+        Icons.hourglass_top,
+        'Mahalle moderasyon ekibi pati kartini inceliyor.',
+      ),
       DriverStatus.approved => (
-          Colors.green.withValues(alpha: 0.1),
-          Colors.green,
-          Icons.check_circle,
-          'Profiliniz onaylı! Arama sonuçlarında görünüyorsunuz.',
-        ),
+        Colors.green.withValues(alpha: 0.1),
+        Colors.green,
+        Icons.check_circle,
+        'Harika. Artik mahallede sevilmeye hazir gorunuyorsun.',
+      ),
       DriverStatus.rejected => (
-          colors.error.withValues(alpha: 0.1),
-          colors.error,
-          Icons.cancel,
-          'Profiliniz reddedildi. Belgelerinizi kontrol edin.',
-        ),
+        colors.error.withValues(alpha: 0.1),
+        colors.error,
+        Icons.cancel,
+        'Profil biraz fazla yaramaz bulundu. Rozetleri yeniden kontrol et.',
+      ),
     };
 
     return Card(
@@ -197,7 +198,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText.caption(
-                    'Onay Durumu: ${status.label}',
+                    'Koloni durumu: ${status.label}',
                     color: textColor,
                   ),
                   SizedBox(height: spacing.s4),
@@ -215,6 +216,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
     final colors = context.appColors;
     final spacing = context.appSpacing;
     final radius = context.appRadius;
+    final cat = CatThemeCopy.vehicleProfile(vehicle);
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -231,11 +233,7 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                 color: colors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                Icons.local_shipping,
-                color: colors.primary,
-                size: 24,
-              ),
+              child: Icon(Icons.pets, color: colors.primary, size: 24),
             ),
             SizedBox(width: spacing.s12),
             Expanded(
@@ -243,14 +241,16 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText.bodySmall(
-                    '${vehicle.type.label} — ${vehicle.plateNumber}',
+                    '${cat.nickname} · ${cat.archetypeLabel}',
                     color: colors.textPrimary,
                   ),
                   SizedBox(height: spacing.s4),
                   AppText.caption(
-                    '${vehicle.capacityKg} kg',
+                    '${cat.colorLabel} · ${cat.weightLabel}',
                     color: colors.textSecondary,
                   ),
+                  SizedBox(height: spacing.s4),
+                  AppText.caption(cat.vibeLine, color: colors.textSecondary),
                 ],
               ),
             ),
@@ -274,19 +274,15 @@ class _DriverDashboardScreenState extends State<DriverDashboardScreen> {
         padding: EdgeInsets.all(spacing.s24),
         child: Column(
           children: [
-            Icon(
-              Icons.local_shipping_outlined,
-              size: 48,
-              color: colors.textSecondary,
-            ),
+            Icon(Icons.pets_outlined, size: 48, color: colors.textSecondary),
             SizedBox(height: spacing.s12),
             AppText.bodySmall(
-              'Henüz araç eklemediniz.',
+              'Henuz yayinda bir kedi profili eklemediniz.',
               color: colors.textSecondary,
             ),
             SizedBox(height: spacing.s12),
             AppButton(
-              label: 'Araç Ekle',
+              label: 'Ilk Pati Profilini Ekle',
               onPressed: () => context.push(AppRoutes.addVehicle),
               icon: const Icon(Icons.add),
             ),

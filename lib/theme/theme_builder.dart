@@ -24,7 +24,7 @@ class ThemeBuilder {
       appBarTheme: AppBarTheme(
         elevation: 0,
         centerTitle: true,
-        backgroundColor: appTheme.colors.surface,
+        backgroundColor: Colors.transparent,
         foregroundColor: appTheme.colors.textPrimary,
         titleTextStyle: appTheme.typography.title.copyWith(
           color: appTheme.colors.textPrimary,
@@ -260,6 +260,19 @@ class ThemeBuilder {
         color: appTheme.colors.divider,
         thickness: 1,
         space: 1,
+      ),
+
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: appTheme.colors.surface,
+        selectedItemColor: appTheme.colors.primary,
+        unselectedItemColor: appTheme.colors.textSecondary,
+        selectedLabelStyle: appTheme.typography.caption.copyWith(
+          fontWeight: FontWeight.w700,
+        ),
+        unselectedLabelStyle: appTheme.typography.caption,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        elevation: 0,
       ),
 
       // Snackbar theme (for Toast)

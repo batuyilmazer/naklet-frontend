@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/auth_providers.dart';
 
 /// Configuration for a single tab in the shell layout.
 ///
@@ -47,25 +48,31 @@ class MainShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isGuest = context.watchAuthNotifier().isGuest;
     final location = GoRouterState.of(context).uri.toString();
 
     final currentIndex = _resolveCurrentIndex(location);
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        items: [
-          for (final tab in tabs)
-            BottomNavigationBarItem(icon: Icon(tab.icon), label: tab.label),
-        ],
-        onTap: (index) {
-          final target = tabs[index];
-          if (target.path != location) {
-            context.go(target.path);
-          }
-        },
-      ),
+      bottomNavigationBar: isGuest
+          ? null
+          : BottomNavigationBar(
+              currentIndex: currentIndex,
+              items: [
+                for (final tab in tabs)
+                  BottomNavigationBarItem(
+                    icon: Icon(tab.icon),
+                    label: tab.label,
+                  ),
+              ],
+              onTap: (index) {
+                final target = tabs[index];
+                if (target.path != location) {
+                  context.go(target.path);
+                }
+              },
+            ),
     );
   }
 

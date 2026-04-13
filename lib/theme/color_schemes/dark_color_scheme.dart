@@ -8,52 +8,52 @@ class DarkColorScheme implements AppColorScheme {
   const DarkColorScheme();
 
   @override
-  Color get primary => const Color(0xFFFAFAFA);
+  Color get primary => const Color(0xFFFFB36B);
 
   @override
-  Color get onPrimary => const Color(0xFF09090B);
+  Color get onPrimary => const Color(0xFF24170F);
 
   @override
-  Color get background => const Color(0xFF09090B);
+  Color get background => const Color(0xFF17110D);
 
   @override
-  Color get textPrimary => const Color(0xFFFAFAFA);
+  Color get textPrimary => const Color(0xFFFFF1E4);
 
   @override
-  Color get textSecondary => const Color(0xFFA1A1AA);
+  Color get textSecondary => const Color(0xFFD0B9A6);
 
   @override
-  Color get textDisabled => const Color(0xFF71717A);
+  Color get textDisabled => const Color(0xFF8C7565);
 
   @override
-  Color get error => const Color(0xFFF87171);
+  Color get error => const Color(0xFFFF8C7A);
 
   @override
-  Color get success => const Color(0xFF4ADE80);
+  Color get success => const Color(0xFF6DDB9A);
 
   @override
-  Color get warning => const Color(0xFFFBBF24);
+  Color get warning => const Color(0xFFFFC86F);
 
   @override
-  Color get info => const Color(0xFF60A5FA);
+  Color get info => const Color(0xFF8DC4FF);
 
   @override
-  Color get surface => const Color(0xFF18181B);
+  Color get surface => const Color(0xFF241A14);
 
   @override
   Color get onSurface => textPrimary;
 
   @override
-  Color get surfaceVariant => const Color(0xFF27272A);
+  Color get surfaceVariant => const Color(0xFF352720);
 
   @override
-  Color get border => const Color(0xFF27272A);
+  Color get border => const Color(0xFF46342A);
 
   @override
   Color get divider => border;
 
   @override
-  Color get disabled => const Color(0xFF27272A);
+  Color get disabled => const Color(0xFF382A22);
 
   @override
   Color get overlay => const Color(0xB3000000);

@@ -7,8 +7,10 @@ import '../route_paths.dart';
 /// Authentication guard that handles route protection based on auth state.
 ///
 /// Route categories:
-/// - **Auth routes** (login, register, driverRegister): Redirect to home if already logged in.
-/// - **Public routes** (search, vehicleDetail): Accessible by everyone (guest + auth).
+/// - **Entry routes** (landing, login, register, driverRegister): Redirect to
+///   home if already authenticated.
+/// - **Public routes** (landing, search, vehicleDetail): Accessible by
+///   everyone (guest + auth).
 /// - **Protected routes** (dashboard, addVehicle, driverProfile, documents): Auth only.
 class AuthGuard {
   /// Determines if a redirect is needed based on authentication state.
@@ -36,11 +38,13 @@ class AuthGuard {
 
     // If not logged in and trying to access protected route
     if (!isLoggedIn && !isAuthRoute) {
-      return AppRoutes.login;
+      return AppRoutes.landing;
     }
 
-    // If logged in (authenticated or guest) and trying to access auth routes
-    if (isLoggedIn && isAuthRoute) {
+    // Authenticated users are redirected away from pre-auth entry routes.
+    // Guest users can still access auth routes.
+    if (authNotifier.isAuthenticated &&
+        (isAuthRoute || currentPath == AppRoutes.landing)) {
       return AppRoutes.home;
     }
 
@@ -61,7 +65,8 @@ class AuthGuard {
 
   /// Public routes — accessible by everyone, no auth required.
   static bool _isPublicRoute(String path) {
-    return path == AppRoutes.search ||
+    return path == AppRoutes.landing ||
+        path == AppRoutes.search ||
         path.startsWith(AppRoutes.vehicleDetail);
   }
 

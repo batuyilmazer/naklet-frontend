@@ -5,6 +5,7 @@ import '../../../core/models/driver/vehicle_type.dart';
 import '../../../core/models/search/nearby_vehicle.dart';
 import '../../../theme/extensions/theme_context_extensions.dart';
 import '../../../ui/atoms/app_text.dart';
+import '../../../ui/cat_theme/cat_theme.dart';
 
 /// Vehicle detail screen showing full driver and vehicle information.
 ///
@@ -15,10 +16,10 @@ class VehicleDetailScreen extends StatelessWidget {
   final NearbyVehicle vehicle;
 
   IconData _vehicleIcon(VehicleType type) => switch (type) {
-    VehicleType.kamyonet => Icons.local_shipping,
-    VehicleType.panelvan => Icons.airport_shuttle,
-    VehicleType.kamyon => Icons.fire_truck,
-    VehicleType.tir => Icons.rv_hookup,
+    VehicleType.kamyonet => Icons.pets,
+    VehicleType.panelvan => Icons.visibility_outlined,
+    VehicleType.kamyon => Icons.soap_outlined,
+    VehicleType.tir => Icons.nightlight_round,
   };
 
   @override
@@ -26,9 +27,7 @@ class VehicleDetailScreen extends StatelessWidget {
     final spacing = context.appSpacing;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Araç Detayı'),
-      ),
+      appBar: AppBar(title: const Text('Kedi Profili')),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(spacing.s16),
         child: Column(
@@ -55,8 +54,10 @@ class VehicleDetailScreen extends StatelessWidget {
     final colors = context.appColors;
     final spacing = context.appSpacing;
     final radius = context.appRadius;
+    final cat = CatThemeCopy.nearbyProfile(vehicle);
 
     return Card(
+      color: colors.surfaceVariant,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.card),
       ),
@@ -68,13 +69,9 @@ class VehicleDetailScreen extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 28,
-                  backgroundColor: colors.primary.withValues(alpha: 0.1),
-                  child: Icon(
-                    Icons.person,
-                    size: 32,
-                    color: colors.primary,
-                  ),
+                  radius: 32,
+                  backgroundColor: colors.primary.withValues(alpha: 0.14),
+                  child: Icon(Icons.pets, size: 34, color: colors.primary),
                 ),
                 SizedBox(width: spacing.s12),
                 Expanded(
@@ -82,21 +79,36 @@ class VehicleDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AppText.bodySmall(
-                        'Sürücü',
+                        'Bugunun gozdesi',
                         color: colors.textSecondary,
                       ),
                       SizedBox(height: spacing.s4),
                       Text(
-                        vehicle.driver.fullName,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        cat.nickname,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colors.textPrimary,
                             ),
+                      ),
+                      SizedBox(height: spacing.s4),
+                      AppText.caption(
+                        '${cat.archetypeLabel} · ${cat.colorLabel}',
+                        color: colors.textSecondary,
                       ),
                     ],
                   ),
                 ),
               ],
+            ),
+            SizedBox(height: spacing.s16),
+            Container(
+              padding: EdgeInsets.all(spacing.s12),
+              decoration: BoxDecoration(
+                color: colors.surface,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: AppText.bodySmall(cat.vibeLine, color: colors.textPrimary),
             ),
           ],
         ),
@@ -108,6 +120,7 @@ class VehicleDetailScreen extends StatelessWidget {
     final colors = context.appColors;
     final spacing = context.appSpacing;
     final radius = context.appRadius;
+    final cat = CatThemeCopy.nearbyProfile(vehicle);
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -126,18 +139,21 @@ class VehicleDetailScreen extends StatelessWidget {
                   size: 24,
                 ),
                 SizedBox(width: spacing.s8),
-                AppText.bodySmall(
-                  'Araç Bilgileri',
-                  color: colors.textPrimary,
-                ),
+                AppText.bodySmall('Pati Ozeti', color: colors.textPrimary),
               ],
             ),
             SizedBox(height: spacing.s16),
-            _detailRow(context, 'Araç Tipi', vehicle.type.label),
+            _detailRow(context, 'Pati karakteri', cat.archetypeLabel),
             SizedBox(height: spacing.s12),
-            _detailRow(context, 'Plaka', vehicle.plateNumber),
+            _detailRow(context, 'Renk / lakap', cat.colorLabel),
             SizedBox(height: spacing.s12),
-            _detailRow(context, 'Kapasite', '${vehicle.capacityKg} kg'),
+            _detailRow(context, 'Tahmini yas', cat.ageLabel),
+            SizedBox(height: spacing.s12),
+            _detailRow(context, 'Tahmini kilo', cat.weightLabel),
+            SizedBox(height: spacing.s12),
+            _detailRow(context, 'Mahalle etiketi', cat.aliasLabel),
+            SizedBox(height: spacing.s12),
+            _detailRow(context, 'Insanlarin taktigi ad', cat.humanName),
           ],
         ),
       ),
@@ -158,23 +174,22 @@ class VehicleDetailScreen extends StatelessWidget {
         padding: EdgeInsets.all(spacing.s16),
         child: Row(
           children: [
-            Icon(
-              Icons.location_on,
-              color: colors.primary,
-              size: 24,
-            ),
+            Icon(Icons.location_on, color: colors.primary, size: 24),
             SizedBox(width: spacing.s12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppText.caption('Mesafe', color: colors.textSecondary),
+                AppText.caption(
+                  'Tahmini pati mesafesi',
+                  color: colors.textSecondary,
+                ),
                 SizedBox(height: spacing.s4),
                 Text(
                   vehicle.formattedDistance,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: colors.primary,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: colors.primary,
+                  ),
                 ),
               ],
             ),
@@ -190,16 +205,13 @@ class VehicleDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppText.bodySmall(
-          'İletişim',
-          color: context.appColors.textPrimary,
-        ),
+        AppText.bodySmall('Iletisim', color: context.appColors.textPrimary),
         SizedBox(height: spacing.s12),
         // Phone call button
         FilledButton.icon(
           onPressed: () => _makePhoneCall(context),
           icon: const Icon(Icons.phone),
-          label: const Text('Ara'),
+          label: const Text('Miyav Hattini Ara'),
           style: FilledButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: spacing.s16),
             shape: RoundedRectangleBorder(
@@ -213,7 +225,7 @@ class VehicleDetailScreen extends StatelessWidget {
           onPressed: () => _openWhatsApp(context),
           icon: const Icon(Icons.chat, color: Color(0xFF25D366)),
           label: const Text(
-            'WhatsApp',
+            'Mama Birakmak Icin Yaz',
             style: TextStyle(color: Color(0xFF25D366)),
           ),
           style: OutlinedButton.styleFrom(
@@ -238,9 +250,9 @@ class VehicleDetailScreen extends StatelessWidget {
         Text(
           value,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-                color: colors.textPrimary,
-              ),
+            fontWeight: FontWeight.w500,
+            color: colors.textPrimary,
+          ),
         ),
       ],
     );
@@ -255,9 +267,9 @@ class VehicleDetailScreen extends StatelessWidget {
       await launchUrl(uri);
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Arama yapılamıyor')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Miyav hatti acilamiyor')));
       }
     }
   }
@@ -270,9 +282,9 @@ class VehicleDetailScreen extends StatelessWidget {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('WhatsApp açılamıyor')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Mesaj hatti acilamiyor')));
       }
     }
   }

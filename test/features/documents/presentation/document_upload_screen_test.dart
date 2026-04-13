@@ -94,10 +94,13 @@ void main() {
 
         await _pumpScreen(tester, uploadService: uploadService);
 
-        await tester.tap(find.text('Belgeleri Yükle'));
+        await tester.tap(find.text('Rozetleri Gonder'));
         await tester.pumpAndSettle();
 
-        expect(find.text('Lütfen en az bir belge seçin.'), findsOneWidget);
+        expect(
+          find.text('Lutfen en az bir rozet kaniti secin.'),
+          findsOneWidget,
+        );
       },
     );
 
@@ -119,11 +122,11 @@ void main() {
         pickFromFileOverride: () async => _sampleFile(),
       );
 
-      await tester.tap(find.widgetWithText(OutlinedButton, 'Dosya Seç').first);
+      await tester.tap(find.widgetWithText(OutlinedButton, 'Kanit Sec').first);
       await tester.pumpAndSettle();
 
       expect(find.textContaining('ehliyet.jpg'), findsOneWidget);
-      expect(find.text('Dosya seçildi'), findsOneWidget);
+      expect(find.text('Kanit secildi'), findsOneWidget);
     });
 
     testWidgets(
@@ -147,16 +150,16 @@ void main() {
         );
 
         await tester.tap(
-          find.widgetWithText(OutlinedButton, 'Dosya Seç').first,
+          find.widgetWithText(OutlinedButton, 'Kanit Sec').first,
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.text('Belgeleri Yükle'));
+        await tester.tap(find.text('Rozetleri Gonder'));
         await tester.pump();
 
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
         final pickButton = tester.widget<OutlinedButton>(
-          find.widgetWithText(OutlinedButton, 'Dosya Seç').first,
+          find.widgetWithText(OutlinedButton, 'Kanit Sec').first,
         );
         expect(pickButton.onPressed, isNull);
 
@@ -196,13 +199,16 @@ void main() {
         pickFromFileOverride: () async => _sampleFile(),
       );
 
-      await tester.tap(find.widgetWithText(OutlinedButton, 'Dosya Seç').first);
+      await tester.tap(find.widgetWithText(OutlinedButton, 'Kanit Sec').first);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Belgeleri Yükle'));
+      await tester.tap(find.text('Rozetleri Gonder'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Belgeler başarıyla yüklendi.'), findsOneWidget);
+      expect(
+        find.text('Rozet kanitlari basariyla gonderildi.'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows error message when upload fails', (tester) async {
@@ -221,10 +227,10 @@ void main() {
         pickFromFileOverride: () async => _sampleFile(),
       );
 
-      await tester.tap(find.widgetWithText(OutlinedButton, 'Dosya Seç').first);
+      await tester.tap(find.widgetWithText(OutlinedButton, 'Kanit Sec').first);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Belgeleri Yükle'));
+      await tester.tap(find.text('Rozetleri Gonder'));
       await tester.pumpAndSettle();
 
       expect(find.text('Belgeler yüklenemedi.'), findsOneWidget);

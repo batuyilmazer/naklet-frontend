@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../ui/atoms/app_text.dart';
-import '../../../ui/organisms/auth_form.dart';
-import '../../../theme/extensions/theme_context_extensions.dart';
+
 import '../../../core/errors/validation_failure.dart';
+import '../../../routing/route_paths.dart';
+import '../../../theme/extensions/theme_context_extensions.dart';
+import '../../../ui/atoms/app_text.dart';
+import '../../../ui/cat_theme/cat_theme.dart';
+import '../../../ui/organisms/auth_form.dart';
 import 'auth_notifier.dart';
 import 'auth_state.dart';
-import '../../../routing/route_paths.dart';
 
 /// Login screen for user authentication.
 ///
@@ -29,6 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
     final colors = context.appColors;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Kulubeye Gir'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go(AppRoutes.landing),
+        ),
+      ),
       body: SafeArea(
         child: Consumer<AuthNotifier>(
           builder: (context, authNotifier, child) {
@@ -57,22 +66,29 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: spacing.s32),
-                  // Logo or app name placeholder
-                  AppText.headline(
-                    'Naklet.net',
-                    textAlign: TextAlign.center,
-                    color: colors.primary,
+                  SizedBox(height: spacing.s24),
+                  Container(
+                    padding: EdgeInsets.all(spacing.s24),
+                    decoration: BoxDecoration(
+                      color: colors.surfaceVariant,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText.headline(
+                          CatThemeCopy.appName,
+                          color: colors.primary,
+                        ),
+                        SizedBox(height: spacing.s8),
+                        AppText.bodySmall(
+                          'Mahalle hesabinla giris yap ve kendi pati profillerini yonet.',
+                          color: colors.textSecondary,
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: spacing.s8),
-                  AppText.bodySmall(
-                    'Nakliyeci mi arıyorsunuz? Giriş yapın veya ziyaretçi olarak keşfedin.',
-                    textAlign: TextAlign.center,
-                    color: colors.textSecondary,
-                  ),
-                  SizedBox(height: spacing.s32),
-                  SizedBox(height: spacing.s16),
-                  // Login form
+                  SizedBox(height: spacing.s24),
                   AuthForm(
                     onSubmit: (email, password) async {
                       _emailError = null;
@@ -93,75 +109,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         _parseError(state.message);
                       }
                     },
-                    submitLabel: 'Giriş Yap',
+                    submitLabel: 'Kulubeye Gir',
                     emailLabel: 'Email',
                     passwordLabel: 'Şifre',
-                    emailHint: 'Email adresinizi girin',
-                    passwordHint: 'Şifrenizi girin',
+                    emailHint: 'Mahalle hesabinizin emaili',
+                    passwordHint: 'Gizli miyav sifreniz',
                     isLoading: state is AuthLoadingState,
                     emailError: _emailError,
                     passwordError: _passwordError,
                   ),
                   SizedBox(height: spacing.s24),
-                  // Sürücü kayıt butonu
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      context.go(AppRoutes.driverRegister);
-                    },
-                    icon: const Icon(Icons.local_shipping_outlined),
-                    label: const Text('Sürücü Olarak Kayıt Ol'),
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: spacing.s16),
-                      side: BorderSide(color: colors.primary),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: spacing.s8),
-                  // Divider with "or" text
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: colors.textSecondary.withValues(alpha: 0.3))),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: spacing.s16),
-                        child: AppText.caption(
-                          'veya',
-                          color: colors.textSecondary,
-                        ),
-                      ),
-                      Expanded(child: Divider(color: colors.textSecondary.withValues(alpha: 0.3))),
-                    ],
-                  ),
-                  SizedBox(height: spacing.s8),
-                  // Guest access button for unregistered customers (yük sahipleri)
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      authNotifier.continueAsGuest();
-                    },
-                    icon: const Icon(Icons.explore_outlined),
-                    label: const Text('Ziyaretçi Olarak Keşfet'),
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: spacing.s16),
-                      side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: spacing.s16),
-                  // Forgot password link
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to forgot password screen
                       _showInfoSnackBar(
                         context,
-                        'Forgot password feature coming soon',
+                        'Mama kabi sifirlama ekrani yakinda gelecek.',
                       );
                     },
                     child: AppText.caption(
-                      'Forgot Password?',
+                      'Mama Kabini Unuttum',
                       color: colors.textSecondary,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => context.go(AppRoutes.landing),
+                    child: AppText.caption(
+                      'Landing ekranina don',
+                      color: colors.primary,
                     ),
                   ),
                 ],

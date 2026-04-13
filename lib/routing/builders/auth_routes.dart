@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/landing_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/driver_registration/presentation/driver_register_screen.dart';
@@ -12,6 +13,11 @@ import '../route_paths.dart';
 /// - Driver Registration (multi-step)
 class AuthRoutes {
   static List<RouteBase> get routes => [
+    GoRoute(
+      path: AppRoutes.landing,
+      name: 'landing',
+      builder: (context, state) => const LandingScreen(),
+    ),
     GoRoute(
       path: AppRoutes.login,
       name: 'login',

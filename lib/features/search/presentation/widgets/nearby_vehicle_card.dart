@@ -4,6 +4,7 @@ import '../../../../core/models/driver/vehicle_type.dart';
 import '../../../../core/models/search/nearby_vehicle.dart';
 import '../../../../theme/extensions/theme_context_extensions.dart';
 import '../../../../ui/atoms/app_text.dart';
+import '../../../../ui/cat_theme/cat_theme.dart';
 
 /// Compact card widget displaying a nearby vehicle in search results.
 ///
@@ -20,10 +21,10 @@ class NearbyVehicleCard extends StatelessWidget {
   final VoidCallback onTap;
 
   IconData _vehicleIcon(VehicleType type) => switch (type) {
-    VehicleType.kamyonet => Icons.local_shipping,
-    VehicleType.panelvan => Icons.airport_shuttle,
-    VehicleType.kamyon => Icons.fire_truck,
-    VehicleType.tir => Icons.rv_hookup,
+    VehicleType.kamyonet => Icons.pets,
+    VehicleType.panelvan => Icons.visibility_outlined,
+    VehicleType.kamyon => Icons.soap_outlined,
+    VehicleType.tir => Icons.nightlight_round,
   };
 
   @override
@@ -31,9 +32,9 @@ class NearbyVehicleCard extends StatelessWidget {
     final colors = context.appColors;
     final spacing = context.appSpacing;
     final radius = context.appRadius;
+    final cat = CatThemeCopy.nearbyProfile(vehicle);
 
     return Card(
-      elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius.card),
       ),
@@ -64,29 +65,31 @@ class NearbyVehicleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText.bodySmall(
-                      vehicle.driver.fullName,
-                      color: colors.textPrimary,
-                    ),
+                    AppText.bodySmall(cat.nickname, color: colors.textPrimary),
                     SizedBox(height: spacing.s4),
+                    AppText.caption(
+                      '${cat.colorLabel} · ${cat.ageLabel}',
+                      color: colors.textSecondary,
+                    ),
+                    SizedBox(height: spacing.s8),
                     Row(
                       children: [
                         _infoChip(
                           context,
-                          vehicle.type.label,
-                          Icons.local_shipping_outlined,
+                          cat.archetypeLabel,
+                          Icons.auto_awesome_outlined,
                         ),
                         SizedBox(width: spacing.s8),
                         _infoChip(
                           context,
-                          '${vehicle.capacityKg} kg',
+                          cat.weightLabel,
                           Icons.scale_outlined,
                         ),
                       ],
                     ),
                     SizedBox(height: spacing.s4),
                     AppText.caption(
-                      vehicle.plateNumber,
+                      'Mahalle notu: ${cat.vibeLine}',
                       color: colors.textSecondary,
                     ),
                   ],

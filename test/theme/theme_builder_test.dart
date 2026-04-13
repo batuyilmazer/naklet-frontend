@@ -51,7 +51,7 @@ void main() {
       final appTheme = AppThemeData.light();
       final themeData = ThemeBuilder.buildThemeData(appTheme);
 
-      expect(themeData.appBarTheme.backgroundColor, appTheme.colors.surface);
+      expect(themeData.appBarTheme.backgroundColor, Colors.transparent);
       expect(
         themeData.appBarTheme.foregroundColor,
         appTheme.colors.textPrimary,

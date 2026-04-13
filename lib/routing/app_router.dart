@@ -26,7 +26,7 @@ class AppRouter {
     final authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
     return GoRouter(
-      initialLocation: AppRoutes.login,
+      initialLocation: AppRoutes.landing,
 
       redirect: (context, state) =>
           AuthGuard.redirect(context, state, authNotifier),
